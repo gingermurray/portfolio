@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — Ginger Murray</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyan: #00e5ff;
+    --cyan-dim: #00b8cc;
+    --bg: #030a0f;
+    --bg2: #070f16;
+    --bg3: #0d1a24;
+    --glass: rgba(0,229,255,0.04);
+    --border: rgba(0,229,255,0.15);
+    --text: #c8dde8;
+    --text-dim: #5a7a8a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+  .noise {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  main { position: relative; z-index: 2; }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(3,10,15,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 6vw; height: 60px;
+  }
+  .nav-logo { font-family: 'Orbitron', monospace; font-size: 0.85rem; font-weight: 900; color: #fff; letter-spacing: 0.1em; text-decoration: none; }
+  .nav-logo span { color: var(--cyan); }
+  .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+  .nav-links a { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-links a.active { color: var(--cyan); }
+  .nav-links .nav-cta { color: var(--cyan); border: 1px solid var(--cyan); padding: 0.35rem 0.9rem; }
+  .nav-links .nav-cta:hover { background: var(--cyan); color: var(--bg); }
+
+  .divider { height: 1px; background: var(--border); }
+
+  section { padding: 6rem 6vw; position: relative; }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.35em; color: var(--cyan); text-transform: uppercase;
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before { content:''; display:block; width:24px; height:1px; background:var(--cyan); }
+
+  .section-title {
+    font-family: 'Orbitron', monospace; font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; color: #fff;
+  }
+  .section-title span { color: var(--cyan); }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  /* ── PROJECT HEADER ── */
+  .project-header {
+    padding-top: 8rem; padding-bottom: 4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .project-eyebrow {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.3em; color: var(--cyan); text-transform: uppercase;
+    margin-bottom: 1.5rem; opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+  .project-hero-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900; line-height: 0.95;
+    letter-spacing: -0.02em; color: #fff;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+  .project-hero-title span { color: var(--cyan); }
+  .project-hero-sub {
+    font-size: 1rem; line-height: 1.75; color: var(--text);
+    max-width: 580px; margin-top: 1.75rem;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  /* ── TECH PILLS ── */
+  .tech-strip { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .tech-pill {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan-dim);
+    border: 1px solid var(--border); padding: 0.3rem 0.75rem;
+    background: var(--glass);
+  }
+
+  /* ── FEATURE CARDS ── */
+  .feature-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+  }
+  .feature-card {
+    background: var(--bg2); padding: 1.75rem;
+    transition: background 0.2s;
+  }
+  .feature-card:hover { background: var(--bg3); }
+  .feature-card-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .feature-card-title {
+    font-family: 'Orbitron', monospace; font-size: 0.7rem; font-weight: 700;
+    color: var(--cyan); letter-spacing: 0.1em; margin-bottom: 0.6rem;
+  }
+  .feature-card-desc { font-size: 0.85rem; color: var(--text); line-height: 1.7; }
+
+  /* ── LINK BTN ── */
+  .link-btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: 'Share Tech Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--cyan);
+    text-decoration: none; border: 1px solid var(--border); padding: 0.6rem 1.1rem;
+    margin-top: 1.5rem; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .link-btn:hover { border-color: var(--cyan); box-shadow: 0 0 16px rgba(0,229,255,0.15); }
+
+  /* ── NWS DEMO ── */
+  .demo-wrap {
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 2rem; margin-top: 2.5rem;
+  }
+  .demo-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.2em; color: var(--text-dim); text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+
+  /* NWS Ticker */
+  #pt-ticker {
+    position: relative; width: 100%;
+    background: rgba(10,10,10,0.97);
+    border-top: 4px solid var(--accent, #FF0000);
+    font-family: 'Share Tech Mono', monospace;
+    overflow: hidden; opacity: 0; transform: translateY(60px);
+    border-radius: 2px;
+  }
+  #pt-ticker::after { content:''; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:0; pointer-events:none; }
+  #pt-ticker.pt-visible { animation: pt-enter 0.5s cubic-bezier(0.16,1,0.3,1) forwards, pt-glow-pulse 1.4s ease-in-out infinite; }
+  #pt-ticker.pt-hiding  { animation: pt-exit 0.35s ease-in forwards; }
+  @keyframes pt-enter { 0%{opacity:0;transform:translateY(60px)} 60%{opacity:1;transform:translateY(-4px)} 80%{transform:translateY(2px)} 100%{opacity:1;transform:translateY(0)} }
+  @keyframes pt-exit  { 0%{opacity:1;transform:translateY(0)} 100%{opacity:0;transform:translateY(60px)} }
+  @keyframes pt-glow-pulse { 0%,100%{box-shadow:0 0 10px rgba(255,0,0,0.3)} 50%{box-shadow:0 0 28px rgba(255,0,0,0.6)} }
+  #pt-ticker.pt-strobe-thunder { animation: pt-enter 0.5s cubic-bezier(0.16,1,0.3,1) forwards, pt-thunder 1.1s ease-in-out infinite; }
+  @keyframes pt-thunder { 0%,100%{box-shadow:0 0 8px rgba(255,165,0,0.3)} 50%{box-shadow:0 0 32px rgba(255,165,0,0.8),0 0 60px rgba(255,165,0,0.3)} }
+  #pt-ticker.pt-strobe-pds { animation: pt-enter 0.5s cubic-bezier(0.16,1,0.3,1) forwards, pt-pds 1.0s ease-in-out infinite; }
+  @keyframes pt-pds { 0%,100%{box-shadow:0 0 10px rgba(255,20,147,0.4)} 50%{box-shadow:0 0 40px rgba(255,20,147,0.9),0 0 80px rgba(255,20,147,0.4)} }
+  #pt-ticker.pt-strobe-flood-emergency { animation: pt-enter 0.5s cubic-bezier(0.16,1,0.3,1) forwards, pt-flood-emerg 0.9s ease-in-out infinite; }
+  @keyframes pt-flood-emerg { 0%,100%{box-shadow:0 0 8px rgba(0,229,204,0.3)} 50%{box-shadow:0 0 36px rgba(0,229,204,0.8)} }
+  #pt-ticker.pt-strobe-flood { animation: pt-enter 0.5s cubic-bezier(0.16,1,0.3,1) forwards, pt-flood 1.1s ease-in-out infinite; }
+  @keyframes pt-flood { 0%,100%{box-shadow:0 0 8px rgba(0,255,0,0.2)} 50%{box-shadow:0 0 28px rgba(0,255,0,0.6)} }
+  #pt-header { display:flex; align-items:stretch; position:relative; z-index:1; }
+  #pt-badge { min-width:130px; padding:0.7rem 1rem; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; background:#FF0000; gap:2px; flex-shrink:0; }
+  #pt-event-type { font-size:0.62rem; font-weight:700; letter-spacing:0.06em; line-height:1.2; color:#fff; }
+  #pt-event-sub  { font-size:0.48rem; letter-spacing:0.08em; color:rgba(255,255,255,0.85); text-transform:uppercase; }
+  #pt-scroll-wrap { flex:1; overflow:hidden; display:flex; align-items:center; padding:0 0.75rem; min-height:52px; }
+  #pt-track { display:flex; align-items:center; gap:1rem; white-space:nowrap; animation:pt-scroll linear infinite; }
+  @keyframes pt-scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .pt-pill { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.55rem; color:rgba(255,255,255,0.9); letter-spacing:0.08em; text-transform:uppercase; }
+  .pt-dot { width:5px; height:5px; border-radius:50%; background:var(--accent,#FF0000); flex-shrink:0; }
+  .pt-sep { color:rgba(255,255,255,0.2); font-size:0.8rem; margin:0 0.25rem; }
+  #pt-meta { display:flex; align-items:center; gap:1rem; padding:0.35rem 0.75rem; background:rgba(0,0,0,0.6); position:relative; z-index:1; border-top:1px solid rgba(255,255,255,0.06); }
+  #pt-expires-block { display:flex; align-items:center; gap:0.4rem; }
+  #pt-expires-label { font-size:0.45rem; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.1em; }
+  #pt-expires-value { font-size:0.52rem; color:rgba(255,255,255,0.75); letter-spacing:0.06em; }
+  #pt-alert-index { margin-left:auto; font-size:0.48rem; color:rgba(255,255,255,0.35); letter-spacing:0.1em; }
+  #pt-progress { height:2px; background:rgba(255,255,255,0.08); position:relative; z-index:1; }
+  #pt-progress-fill { height:100%; background:#FF0000; transform-origin:left; transform:scaleX(1); }
+  #pt-progress-fill.pt-draining { transition:transform linear; transform:scaleX(0); }
+
+  /* NWS color swatches */
+  .color-swatch { width:22px; height:22px; border-radius:2px; display:inline-block; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .nav { padding: 0 5vw; }
+    .nav-links { display: none; flex-direction: column; gap: 0; position: fixed; top: 60px; left: 0; right: 0; background: rgba(3,10,15,0.98); border-bottom: 1px solid var(--border); padding: 1.5rem 5vw; backdrop-filter: blur(12px); z-index: 99; }
+    .nav-links.open { display: flex; }
+    .nav-links li { border-bottom: 1px solid var(--border); }
+    .nav-links li:last-child { border-bottom: none; }
+    .nav-links a { display: block; padding: 0.85rem 0; font-size: 0.7rem; }
+    .nav-links .nav-cta { border: none; padding: 0.85rem 0; }
+    .nav-hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--text); transition: 0.3s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    section { padding: 4rem 5vw !important; }
+    .about-hero { grid-template-columns: 1fr !important; padding-top: 6rem !important; gap: 2rem !important; min-height: auto !important; }
+    .skill-blocks { grid-template-columns: 1fr !important; }
+    .edu-grid { grid-template-columns: 1fr !important; }
+    .achievements { gap: 0.5rem; }
+    .tl-item { grid-template-columns: 80px 1px 1fr !important; gap: 0 1rem !important; }
+    .tl-year { font-size: 0.55rem !important; }
+    .feature-grid { grid-template-columns: 1fr !important; }
+    .process-steps { grid-template-columns: 1fr 1fr !important; }
+    .photo-card img { height: 220px !important; }
+    .gallery-hero-img { height: 280px !important; }
+    .lightbox-prev { left: -10px !important; }
+    .lightbox-next { right: -10px !important; }
+    .service-card { padding: 1.75rem !important; }
+
+    .gallery-grid { grid-template-columns: 1fr !important; }
+    .feature-grid { grid-template-columns: 1fr !important; }
+    .skill-blocks { grid-template-columns: 1fr !important; }
+    .edu-grid { grid-template-columns: 1fr !important; }
+    .process-steps { grid-template-columns: 1fr 1fr !important; }
+    .about-hero { grid-template-columns: 1fr !important; padding-top: 6rem !important; gap: 2rem !important; min-height: auto !important; }
+    .timeline .tl-item { grid-template-columns: 70px 1px 1fr !important; gap: 0 0.75rem !important; }
+  }
+  @media (min-width: 769px) {
+    .nav-hamburger { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">GINGER<span>.</span>MURRAY</a>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="projects.html" class="active">Projects</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="stormcurrent.html">Storm Current</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- ── PAGE HEADER ── -->
+  <section class="project-header">
+    <p class="project-eyebrow">Built from scratch · AI-assisted development</p>
+    <h1 class="project-hero-title">Projects &<br><span>Builds</span></h1>
+    <p class="project-hero-sub">
+      Everything here was built using AI as a coding collaborator — translating visual ideas and real-world weather needs into working, production-ready tools.
+    </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── PROJECT 01 — FACEBOOK NWS ALERTS ── -->
+  <section id="project01">
+    <p class="section-label">Project 01 · First Build</p>
+    <h2 class="section-title">Facebook NWS<br><span>Alerts App</span></h2>
+
+    <p style="max-width:680px;font-size:1rem;line-height:1.8;color:var(--text);margin-top:1.5rem;">
+      My first built-from-scratch project — a Facebook App using the Facebook Developer API that automatically pushes live NWS severe weather alerts directly into followers' newsfeeds. Custom-designed graphics made in Canva ensure each alert stands out in the feed. The app runs 24/7 on a local machine via VS Code, requiring no manual intervention once started.
+    </p>
+
+    <a href="https://www.facebook.com/profile.php?id=61572937943182" target="_blank" class="link-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      View on Facebook
+    </a>
+
+    <div class="tech-strip" style="margin-top:2rem;">
+      <span class="tech-pill">Facebook Developer API</span>
+      <span class="tech-pill">NWS API</span>
+      <span class="tech-pill">Python</span>
+      <span class="tech-pill">Canva</span>
+      <span class="tech-pill">VS Code</span>
+    </div>
+
+    <div class="feature-grid" style="margin-top:2.5rem;">
+      <div class="feature-card">
+        <div class="feature-card-icon">📘</div>
+        <div class="feature-card-title">Facebook Dev API</div>
+        <div class="feature-card-desc">Built using Facebook Developer tools to authenticate and post programmatically to a public page, delivering alerts directly to followers' newsfeeds in real time.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">🌩️</div>
+        <div class="feature-card-title">NWS Data Feed</div>
+        <div class="feature-card-desc">Pulls live severe weather alerts from the NWS API and automatically formats and posts them as they're issued — no manual intervention required once running.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">🎨</div>
+        <div class="feature-card-title">Custom Graphics</div>
+        <div class="feature-card-desc">Each alert type paired with a custom Canva-designed graphic for visual consistency and higher engagement in crowded newsfeeds. Runs 24/7 via VS Code.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── PROJECT 02 — STORM CURRENT ── -->
+  <section id="project02">
+    <p class="section-label">Project 02 · In Development</p>
+    <h2 class="section-title">Storm Current<br><span>Live Platform</span></h2>
+
+    <p style="max-width:680px;font-size:1rem;line-height:1.8;color:var(--text);margin-top:1.5rem;">
+      A live streaming platform built specifically for storm chasers — combining real-time NWS data, YouTube API live stream embeds, Backblaze B2 media storage, and Stripe subscription tiers into one cohesive experience. Launching spring 2026 to coincide with peak tornado season.
+    </p>
+
+    <a href="stormcurrent.html" class="link-btn">
+      Full Platform Details
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+
+    <div class="tech-strip" style="margin-top:2rem;">
+      <span class="tech-pill">React / Vite</span>
+      <span class="tech-pill">Supabase</span>
+      <span class="tech-pill">YouTube API</span>
+      <span class="tech-pill">Backblaze B2</span>
+      <span class="tech-pill">Stripe</span>
+      <span class="tech-pill">Cloudflare</span>
+      <span class="tech-pill">NWS API</span>
+    </div>
+
+    <div class="feature-grid" style="margin-top:2.5rem;">
+      <div class="feature-card">
+        <div class="feature-card-icon">⚡</div>
+        <div class="feature-card-title">Architecture & Auth</div>
+        <div class="feature-card-desc">React/Vite frontend with Supabase backend for real-time data, authentication, and per-chaser profile management. VIP badge system and subscriber-gated media sidebar.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">💳</div>
+        <div class="feature-card-title">Monetization Layer</div>
+        <div class="feature-card-desc">Stripe subscription tiers — free viewers, paid subscribers with media sidebar access, and per-chaser profiles. YouTube monetization alignment researched and mapped.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">📡</div>
+        <div class="feature-card-title">Media & Storage</div>
+        <div class="feature-card-desc">YouTube Data API for embedding and managing live streams. Backblaze B2 for cost-effective storage and delivery of all other media content.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">🎨</div>
+        <div class="feature-card-title">OBS-Inspired UI</div>
+        <div class="feature-card-desc">Interactive broadcast-style interface — users can click alerts to expand full details, and a chat panel that can be freely dragged and resized anywhere on screen.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">🌪️</div>
+        <div class="feature-card-title">NWS Integration</div>
+        <div class="feature-card-desc">Live NWS alert data with NWS-accurate color standards, per-type strobe animations, and real-time county-level scrolling ticker baked into the platform UI.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon">👤</div>
+        <div class="feature-card-title">Chaser Profiles</div>
+        <div class="feature-card-desc">Per-chaser profile pages with Twitch-style layout, VIP badge system, and subscriber-gated content — built to showcase individual chasers within the platform.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── PROJECT 03 — NWS ALERT CARD ── -->
+  <section id="project03" style="background:var(--bg2);">
+    <p class="section-label">Project 03 · Featured Build</p>
+    <h2 class="section-title">NWS Alert Card<br><span>Interactive Overlay</span></h2>
+
+    <p style="max-width:680px;font-size:1rem;line-height:1.8;color:var(--text);margin-top:1.5rem;">
+      An OBS-inspired interactive weather alert system built entirely in pure HTML, CSS, and JavaScript — zero dependencies. Pulls live data from <code style="font-family:'Share Tech Mono',monospace;font-size:0.85em;color:var(--cyan);background:rgba(0,229,255,0.06);padding:0.1em 0.4em;">api.weather.gov</code>, maps every alert type to its official NWS hex color, and fires per-type strobe animations for instant visual recognition. Cycles through multiple active alerts with smooth transitions and a draining progress bar.
+    </p>
+
+    <div class="tech-strip" style="margin-top:2rem;">
+      <span class="tech-pill">HTML / CSS / JS</span>
+      <span class="tech-pill">NWS API</span>
+      <span class="tech-pill">CSS Keyframes</span>
+      <span class="tech-pill">Zero Dependencies</span>
+    </div>
+
+    <!-- LIVE DEMO -->
+    <div class="demo-wrap">
+      <div class="demo-label">↓ Live interactive demo — cycles through alert types every 10 seconds</div>
+      <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; min-height: 100vh;
+    background: #1a1a2e;
+    font-family: 'Barlow', sans-serif;
+  }
+
+  /* ── TICKER WRAPPER ── */
+  #ticker {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 52px;
+    opacity: 0;
+    transform: translateY(60px);
+    border-top: 4px solid var(--accent, #FF0000);
+    animation: glow-pulse 1.4s ease-in-out infinite;
+    overflow: visible;
+    display: flex;
+    align-items: stretch;
+  }
+  /* background lives on ::after so it never clips the box-shadow */
+  #ticker::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 0;
+    pointer-events: none;
+  }
+  #ticker.visible { animation: ticker-enter 0.5s cubic-bezier(0.16,1,0.3,1) forwards, glow-pulse 1.4s ease-in-out infinite; }
+  #ticker.hiding  { animation: ticker-exit 0.35s ease-in forwards; }
+  @keyframes ticker-enter {
+    0%   { opacity:0; transform:translateY(60px); }
+    60%  { opacity:1; transform:translateY(-4px); }
+    80%  { transform:translateY(2px); }
+    100% { opacity:1; transform:translateY(0); }
+  }
+  @keyframes ticker-exit {
+    0%   { opacity:1; transform:translateY(0); }
+    100% { opacity:0; transform:translateY(60px); }
+  }
+  @keyframes glow-pulse {
+    0%,100% { box-shadow: 0 -2px 5px 1px var(--accent, #FF0000); }
+    50%      { box-shadow: 0 -3px 10px 2px var(--accent, #FF0000); }
+  }
+  #ticker.strobe-thunder { animation: ticker-enter 0.5s cubic-bezier(0.16,1,0.3,1) forwards, strobe-thunder 1.1s ease-in-out infinite; }
+  @keyframes strobe-thunder {
+    0%,100% { border-top-color:#FFA500; box-shadow: 0 -2px 5px 1px #FFA500; }
+    50%      { border-top-color:#FFB733; box-shadow: 0 -3px 10px 2px #FFA500; }
+  }
+  #ticker.strobe-pds { animation: ticker-enter 0.5s cubic-bezier(0.16,1,0.3,1) forwards, strobe-pds 1.0s ease-in-out infinite; }
+  @keyframes strobe-pds {
+    0%,100% { border-top-color:#FF1493; box-shadow: 0 -2px 5px 1px #FF1493; }
+    50%      { border-top-color:#FF5EB8; box-shadow: 0 -3px 10px 2px #FF1493; }
+  }
+  #ticker.strobe-flood-emergency { animation: ticker-enter 0.5s cubic-bezier(0.16,1,0.3,1) forwards, strobe-flood-emergency 0.9s ease-in-out infinite; }
+  @keyframes strobe-flood-emergency {
+    0%,100% { border-top-color:#00E5CC; box-shadow: 0 -2px 5px 1px #00E5CC; }
+    50%      { border-top-color:#00FFE8; box-shadow: 0 -3px 10px 2px #00E5CC; }
+  }
+  #ticker.strobe-flood { animation: ticker-enter 0.5s cubic-bezier(0.16,1,0.3,1) forwards, strobe-flood 1.1s ease-in-out infinite; }
+  @keyframes strobe-flood {
+    0%,100% { border-top-color:#00FF00; box-shadow: 0 -2px 5px 1px #00FF00; }
+    50%      { border-top-color:#66FF66; box-shadow: 0 -3px 10px 2px #00FF00; }
+  }
+
+  /* ── BODY ROW ── */
+
+  /* LEFT BADGE */
+  #ticker-badge {
+    position: relative; z-index: 1;
+    background: var(--accent, #FF0000) !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 28px 0 16px;
+    background: var(--accent, #FF0000);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
+    flex-shrink: 0;
+    min-width: 280px;
+  }
+  #badge-icon svg { width: 20px; height: 20px; }
+  #event-type {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px; font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff; line-height: 1;
+    white-space: nowrap;
+  }
+  #event-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+  }
+
+  /* COUNTIES */
+  #ticker-counties {
+    position: relative; z-index: 1;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  #ticker-counties::before { content:''; position:absolute; top:0; bottom:0; left:0;  width:32px; z-index:2; background: linear-gradient(to right, rgba(0,0,0,0.82), transparent); pointer-events:none; }
+  #ticker-counties::after  { content:''; position:absolute; top:0; bottom:0; right:0; width:32px; z-index:2; background: linear-gradient(to left,  rgba(0,0,0,0.82), transparent); pointer-events:none; }
+
+  #counties-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    padding-left: 16px;
+    animation: county-scroll 20s linear infinite;
+  }
+  @keyframes county-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .county-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 3px; padding: 3px 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.8);
+    flex-shrink: 0;
+  }
+  .county-dot { width:5px; height:5px; border-radius:50%; background:var(--accent,#FF0000); flex-shrink:0; }
+  .county-sep { color:rgba(255,255,255,0.15); font-size:14px; padding:0 8px; flex-shrink:0; }
+
+  /* RIGHT META */
+  #ticker-meta {
+    position: relative; z-index: 1;
+    display: flex; align-items: center;
+    flex-shrink: 0;
+    border-left: 1px solid rgba(255,255,255,0.08);
+  }
+  #expires-block { display:flex; flex-direction:column; align-items:flex-start; padding:0 18px; gap:1px; }
+  #expires-label { font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.2); }
+  #expires-value { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; color:#fff; letter-spacing:0.03em; white-space:nowrap; }
+  #alert-index   { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; color:rgba(255,255,255,0.2); letter-spacing:0.08em; padding:0 14px; border-left:1px solid rgba(255,255,255,0.06); align-self:stretch; display:flex; align-items:center; }
+
+  /* PROGRESS */
+  #progress-bar  { position:absolute; z-index: 1; bottom:0; left:0; right:0; height:3px; background:rgba(255,255,255,0.06); }
+  #progress-fill { height:100%; background:var(--accent,#FF0000); width:100%; transform-origin:left; }
+  #progress-fill.draining { transition: transform linear; transform: scaleX(0); }
+</style>
+      <div id="ticker">
+    <div id="ticker-badge">
+      <div id="badge-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L2 21h20L12 3z" fill="rgba(0,0,0,0.25)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="12" y1="9" x2="12" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="17.5" r="1.2" fill="white"/>
+        </svg>
+      </div>
+      <div id="badge-text">
+        <div id="event-type"></div>
+        <div id="event-sub">NWS · Active Alert</div>
+      </div>
+    </div>
+    <div id="ticker-counties"><div id="counties-track"></div></div>
+    <div id="ticker-meta">
+      <div id="expires-block">
+        <div id="expires-label">Expires</div>
+        <div id="expires-value">—</div>
+      </div>
+      <div id="alert-index"></div>
+    </div>
+  <div id="progress-bar"><div id="progress-fill"></div></div>
+</div>
+      <script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  const ALERTS     = [{"id": "t1", "event": "Tornado Warning", "area": "Freeborn County; Faribault County; Martin County; Dodge County; Steele County", "expires": "March 9 at 9:45 PM CST", "hazard": "Tornado", "source": "Radar indicated", "impact": "Flying debris"}, {"id": "t2", "event": "Severe Thunderstorm Warning", "area": "Mower County; Dodge County; Olmsted County", "expires": "March 9 at 10:00 PM CST", "hazard": "60 mph gusts", "source": "Radar", "impact": "Hail damage"}];
+  const DISPLAY_MS = 10000;
+  const TRANS_MS   = 400;
+
+  const NWS_COLORS = {
+    'tornado emergency':                '#FF00FF',
+    'flash flood emergency':            '#00E5CC',
+    'pds tornado warning':              '#FF1493',
+    'tornado warning':                  '#FF0000',
+    'particularly dangerous situation': '#FF1493',
+    'pds tornado watch':                '#FF1493',
+    'severe thunderstorm warning':      '#FFA500',
+    'flash flood warning':              '#00FF00',
+    'tornado watch':                    '#FFFF00',
+    'severe thunderstorm watch':        '#DB8800',
+    'severe weather watch':             '#DB8800',
+  };
+
+  function nwsColor(event) {
+    var e = (event||'').toLowerCase();
+    for (var k in NWS_COLORS) { if (e.includes(k)) return NWS_COLORS[k]; }
+    return '#3B82F6';
+  }
+
+  function textColor(bg) {
+    return ['#FFFF00','#DB8800','#7CFC00','#8B8B00'].includes(bg) ? '#000' : '#fff';
+  }
+
+  var cursor = 0, cycleTimer = null;
+  var ticker       = document.getElementById('ticker');
+  var tickerBadge  = document.getElementById('ticker-badge');
+  var eventType    = document.getElementById('event-type');
+  var eventSub     = document.getElementById('event-sub');
+  var alertIndex   = document.getElementById('alert-index');
+  var countiesTrack = document.getElementById('counties-track');
+  var expiresVal   = document.getElementById('expires-value');
+  var progressFill = document.getElementById('progress-fill');
+
+  function setAccent(color, event) {
+    document.documentElement.style.setProperty('--accent', color);
+    tickerBadge.style.background = color;
+    progressFill.style.background = color;
+    var tc = textColor(color);
+    eventType.style.color = tc;
+    eventSub.style.color  = tc === '#000' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.85)';
+    var e = (event||'').toLowerCase();
+    var isThunder        = e.includes('thunderstorm') && e.includes('warning');
+    var isPDS            = e.includes('pds') || e.includes('particularly dangerous') || e.includes('tornado emergency');
+    var isFloodEmergency = e.includes('flash flood emergency');
+    var isFlashFlood     = e.includes('flash flood warning');
+    ticker.style.borderTopColor = color;
+    ticker.classList.remove('strobe-thunder','strobe-pds','strobe-flood-emergency','strobe-flood');
+    if      (isThunder)        ticker.classList.add('strobe-thunder');
+    else if (isPDS)            ticker.classList.add('strobe-pds');
+    else if (isFloodEmergency) ticker.classList.add('strobe-flood-emergency');
+    else if (isFlashFlood)     ticker.classList.add('strobe-flood');
+  }
+
+  function buildPills(areaStr) {
+    countiesTrack.innerHTML = '';
+    var parts = (areaStr||'').split(';').map(function(s){ return s.trim(); }).filter(Boolean);
+    if (!parts.length) parts.push(areaStr||'Multiple Areas');
+    [parts, parts].forEach(function(set, di) {
+      set.forEach(function(c) {
+        var pill = document.createElement('div');
+        pill.className = 'county-pill';
+        pill.innerHTML = '<span class="county-dot"></span>' + c;
+        countiesTrack.appendChild(pill);
+      });
+      if (di === 0) {
+        var sep = document.createElement('span');
+        sep.className = 'county-sep'; sep.textContent = '|';
+        countiesTrack.appendChild(sep);
+      }
+    });
+    countiesTrack.style.animationDuration = Math.max(10, parts.length * 2.2) + 's';
+  }
+
+  function showAlert(a, idx) {
+    var color = nwsColor(a.event);
+    setAccent(color, a.event);
+    eventType.textContent  = (a.event||'Weather Alert').toUpperCase();
+    alertIndex.textContent = ALERTS.length > 1 ? (idx+1)+' / '+ALERTS.length : '';
+    expiresVal.textContent = a.expires || '—';
+    buildPills(a.area);
+    ticker.classList.remove('hiding');
+    void ticker.offsetWidth;
+    ticker.classList.add('visible');
+    progressFill.classList.remove('draining');
+    progressFill.style.transform = 'scaleX(1)';
+    void progressFill.offsetWidth;
+    progressFill.classList.add('draining');
+    progressFill.style.transitionDuration = DISPLAY_MS + 'ms';
+  }
+
+  function hideAlert(cb) {
+    ticker.classList.remove('visible');
+    ticker.classList.add('hiding');
+    setTimeout(function(){ ticker.classList.remove('hiding'); cb(); }, TRANS_MS);
+  }
+
+  function next() {
+    var idx = cursor % ALERTS.length;
+    showAlert(ALERTS[idx], idx);
+    cursor++;
+    clearTimeout(cycleTimer);
+    cycleTimer = setTimeout(function(){ hideAlert(function(){ setTimeout(next, 350); }); }, DISPLAY_MS);
+  }
+
+  if (ALERTS.length) next();
+});
+</script>
+      <div style="margin-top:0.75rem;font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;color:var(--text-dim);text-transform:uppercase;">
+        Cycles every 10 seconds · NWS-accurate colors · per-type strobe animations · county scroll · progress drain
+      </div>
+    </div>
+
+    <!-- Feature breakdown -->
+    <div class="feature-grid" style="margin-top:2.5rem;">
+      <div class="feature-card">
+        <div class="feature-card-title">NWS Color System</div>
+        <div class="feature-card-desc" style="margin-bottom:1rem;">Every alert type maps to its official NWS hex — Tornado Warning <span style="color:#FF0000;font-family:'Share Tech Mono',monospace;font-size:0.75em;">#FF0000</span>, Severe T-Storm <span style="color:#FFA500;font-family:'Share Tech Mono',monospace;font-size:0.75em;">#FFA500</span>, Watch <span style="color:#FFFF00;font-family:'Share Tech Mono',monospace;font-size:0.75em;">#FFFF00</span>, PDS <span style="color:#FF1493;font-family:'Share Tech Mono',monospace;font-size:0.75em;">#FF1493</span>.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <div class="color-swatch" style="background:#FF0000;"></div>
+          <div class="color-swatch" style="background:#FFA500;"></div>
+          <div class="color-swatch" style="background:#FFFF00;"></div>
+          <div class="color-swatch" style="background:#FF1493;"></div>
+          <div class="color-swatch" style="background:#00FF00;"></div>
+          <div class="color-swatch" style="background:#00E5CC;"></div>
+          <div class="color-swatch" style="background:#FF00FF;"></div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">Strobe Animations</div>
+        <div class="feature-card-desc">Per-type CSS keyframe animations — Tornado glow pulse, Severe thunderstorm strobe, Flood emergency teal cycle, PDS hot-pink flash. Each tuned to a different interval for instant visual recognition.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">Smart Cycling</div>
+        <div class="feature-card-desc">Alerts auto-cycle with slide-in/out transitions, a draining progress bar, county pill scroll that adapts to the number of areas, and an alert counter badge — all zero-dependency HTML/CSS/JS.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── CTA ── -->
+  <section style="text-align:center;">
+    <p class="section-label" style="justify-content:center;">What's Next</p>
+    <h2 class="section-title" style="margin-bottom:1.5rem;">Interested in<br><span>Working Together?</span></h2>
+    <p style="font-size:1rem;line-height:1.75;color:var(--text);max-width:500px;margin:0 auto 2.5rem;">
+      I build custom websites, AI-powered tools, and weather tech. If you have a project in mind, let's talk.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="services.html" style="display:inline-flex;align-items:center;gap:0.65rem;font-family:'Orbitron',monospace;font-size:0.72rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--cyan);text-decoration:none;border:1px solid var(--cyan);padding:0.9rem 1.75rem;transition:background 0.2s,color 0.2s;" onmouseover="this.style.background='var(--cyan)';this.style.color='var(--bg)'" onmouseout="this.style.background='transparent';this.style.color='var(--cyan)'">
+        View Services →
+      </a>
+      <a href="index.html#contact" style="display:inline-flex;align-items:center;gap:0.65rem;font-family:'Orbitron',monospace;font-size:0.72rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);text-decoration:none;border:1px solid var(--border);padding:0.9rem 1.75rem;transition:border-color 0.2s,color 0.2s;" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">
+        Get In Touch
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  function toggleNav() {
+    document.getElementById('nav-links').classList.toggle('open');
+    document.getElementById('hamburger').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
