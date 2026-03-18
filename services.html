@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services — Ginger Murray</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyan: #00e5ff;
+    --cyan-dim: #00b8cc;
+    --bg: #030a0f;
+    --bg2: #070f16;
+    --bg3: #0d1a24;
+    --glass: rgba(0,229,255,0.04);
+    --border: rgba(0,229,255,0.15);
+    --text: #c8dde8;
+    --text-dim: #5a7a8a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+  .noise {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  main { position: relative; z-index: 2; }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(3,10,15,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 6vw; height: 60px;
+  }
+  .nav-logo { font-family: 'Orbitron', monospace; font-size: 0.85rem; font-weight: 900; color: #fff; letter-spacing: 0.1em; text-decoration: none; }
+  .nav-logo span { color: var(--cyan); }
+  .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+  .nav-links a { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-links a.active { color: var(--cyan); }
+  .nav-links .nav-cta { color: var(--cyan); border: 1px solid var(--cyan); padding: 0.35rem 0.9rem; }
+  .nav-links .nav-cta:hover { background: var(--cyan); color: var(--bg); }
+
+  .divider { height: 1px; background: var(--border); }
+
+  section { padding: 6rem 6vw; }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.35em; color: var(--cyan); text-transform: uppercase;
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before { content:''; display:block; width:24px; height:1px; background:var(--cyan); }
+
+  .section-title {
+    font-family: 'Orbitron', monospace; font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; color: #fff;
+  }
+  .section-title span { color: var(--cyan); }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── HEADER ── */
+  .services-header {
+    padding-top: 8rem; padding-bottom: 4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .services-eyebrow {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.3em; color: var(--cyan); text-transform: uppercase;
+    margin-bottom: 1.5rem; opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+  .services-hero-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900; line-height: 0.95;
+    letter-spacing: -0.02em; color: #fff;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+  .services-hero-title span { color: var(--cyan); }
+  .services-hero-desc {
+    font-size: 1rem; line-height: 1.75; color: var(--text);
+    max-width: 580px; margin-top: 1.75rem;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  /* ── SERVICE CARD ── */
+  .service-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 2.5rem; transition: border-color 0.2s, background 0.2s;
+    display: flex; flex-direction: column; gap: 1.25rem;
+  }
+  .service-card:hover { border-color: var(--cyan); background: var(--bg3); }
+  .service-icon { font-size: 2rem; }
+  .service-num {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.2em; color: var(--text-dim); text-transform: uppercase;
+  }
+  .service-name {
+    font-family: 'Orbitron', monospace; font-size: 1rem; font-weight: 700;
+    color: #fff; letter-spacing: 0.05em; line-height: 1.2;
+  }
+  .service-desc { font-size: 0.9rem; color: var(--text); line-height: 1.75; flex: 1; }
+  .service-includes {
+    border-top: 1px solid var(--border); padding-top: 1.25rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  .service-includes-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.58rem;
+    letter-spacing: 0.2em; color: var(--text-dim); text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .service-include-item {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.82rem; color: var(--text); line-height: 1.5;
+  }
+  .service-include-item::before {
+    content: '→'; color: var(--cyan); font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem; flex-shrink: 0; margin-top: 0.1rem;
+  }
+
+  /* ── PROCESS ── */
+  .process-steps {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+    margin-top: 2.5rem;
+  }
+  .process-step { background: var(--bg2); padding: 2rem 1.5rem; }
+  .process-num {
+    font-family: 'Orbitron', monospace; font-size: 2rem; font-weight: 900;
+    color: var(--border); letter-spacing: -0.02em; margin-bottom: 1rem;
+    line-height: 1;
+  }
+  .process-step-title {
+    font-family: 'Orbitron', monospace; font-size: 0.72rem; font-weight: 700;
+    color: var(--cyan); letter-spacing: 0.1em; margin-bottom: 0.6rem;
+  }
+  .process-step-desc { font-size: 0.85rem; color: var(--text); line-height: 1.7; }
+
+  /* ── CTA ── */
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 0.65rem;
+    font-family: 'Orbitron', monospace; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none;
+    padding: 0.9rem 1.75rem; transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  }
+  .cta-primary { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); }
+  .cta-primary:hover { background: var(--cyan); color: var(--bg); box-shadow: 0 0 24px rgba(0,229,255,0.25); }
+  .cta-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
+  .cta-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .nav { padding: 0 5vw; }
+    .nav-links { display: none; flex-direction: column; gap: 0; position: fixed; top: 60px; left: 0; right: 0; background: rgba(3,10,15,0.98); border-bottom: 1px solid var(--border); padding: 1.5rem 5vw; backdrop-filter: blur(12px); z-index: 99; }
+    .nav-links.open { display: flex; }
+    .nav-links li { border-bottom: 1px solid var(--border); }
+    .nav-links li:last-child { border-bottom: none; }
+    .nav-links a { display: block; padding: 0.85rem 0; font-size: 0.7rem; }
+    .nav-links .nav-cta { border: none; padding: 0.85rem 0; }
+    .nav-hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--text); transition: 0.3s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    section { padding: 4rem 5vw !important; }
+    .about-hero { grid-template-columns: 1fr !important; padding-top: 6rem !important; gap: 2rem !important; min-height: auto !important; }
+    .skill-blocks { grid-template-columns: 1fr !important; }
+    .edu-grid { grid-template-columns: 1fr !important; }
+    .achievements { gap: 0.5rem; }
+    .tl-item { grid-template-columns: 80px 1px 1fr !important; gap: 0 1rem !important; }
+    .tl-year { font-size: 0.55rem !important; }
+    .feature-grid { grid-template-columns: 1fr !important; }
+    .process-steps { grid-template-columns: 1fr 1fr !important; }
+    .photo-card img { height: 220px !important; }
+    .gallery-hero-img { height: 280px !important; }
+    .lightbox-prev { left: -10px !important; }
+    .lightbox-next { right: -10px !important; }
+    .service-card { padding: 1.75rem !important; }
+
+    .gallery-grid { grid-template-columns: 1fr !important; }
+    .feature-grid { grid-template-columns: 1fr !important; }
+    .skill-blocks { grid-template-columns: 1fr !important; }
+    .edu-grid { grid-template-columns: 1fr !important; }
+    .process-steps { grid-template-columns: 1fr 1fr !important; }
+    .about-hero { grid-template-columns: 1fr !important; padding-top: 6rem !important; gap: 2rem !important; min-height: auto !important; }
+    .timeline .tl-item { grid-template-columns: 70px 1px 1fr !important; gap: 0 0.75rem !important; }
+  }
+  @media (min-width: 769px) {
+    .nav-hamburger { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">GINGER<span>.</span>MURRAY</a>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="stormcurrent.html">Storm Current</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- ── HEADER ── -->
+  <section class="services-header">
+    <p class="services-eyebrow">Available for hire · Remote & On-Site</p>
+    <h1 class="services-hero-title">What I<br><span>Can Do For You</span></h1>
+    <p class="services-hero-desc">
+      I build websites, AI-powered tools, and custom weather technology — and I create content that builds audiences. If you have a project, I'd love to hear about it.
+    </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── SERVICES GRID ── -->
+  <section>
+    <p class="section-label">Services</p>
+    <h2 class="section-title" style="margin-bottom:2.5rem;">What I<br><span>Offer</span></h2>
+
+    <div class="feature-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);">
+
+      <div class="service-card">
+        <div class="service-icon">🌐</div>
+        <div class="service-num">01</div>
+        <div class="service-name">Website Building</div>
+        <div class="service-desc">Custom websites built with modern tools — from simple landing pages to full-featured platforms with authentication, databases, and payment integration.</div>
+        <div class="service-includes">
+          <div class="service-includes-label">Includes</div>
+          <div class="service-include-item">Custom design matching your brand</div>
+          <div class="service-include-item">React, HTML/CSS, or static builds</div>
+          <div class="service-include-item">Firebase, Supabase, or cloud backend</div>
+          <div class="service-include-item">Cloudflare hosting & CDN setup</div>
+          <div class="service-include-item">Mobile responsive layouts</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🤖</div>
+        <div class="service-num">02</div>
+        <div class="service-name">AI-Powered Tools</div>
+        <div class="service-desc">Custom AI integrations built for real-world use — live alert systems, intelligent chat tools, automated data feeds, and interactive widgets.</div>
+        <div class="service-includes">
+          <div class="service-includes-label">Includes</div>
+          <div class="service-include-item">Live NWS weather alert systems</div>
+          <div class="service-include-item">AI chat integrations</div>
+          <div class="service-include-item">Automated data feed tools</div>
+          <div class="service-include-item">Interactive broadcast-style overlays</div>
+          <div class="service-include-item">API integrations (NWS, YouTube, etc.)</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🎬</div>
+        <div class="service-num">03</div>
+        <div class="service-name">Content Creation</div>
+        <div class="service-desc">Engaging content for social media, live streams, and digital campaigns — video, graphics, and storytelling that builds and retains audiences.</div>
+        <div class="service-includes">
+          <div class="service-includes-label">Includes</div>
+          <div class="service-include-item">Social media content strategy</div>
+          <div class="service-include-item">Video editing & production</div>
+          <div class="service-include-item">Thumbnails & branded graphics</div>
+          <div class="service-include-item">Live stream setup & management</div>
+          <div class="service-include-item">Facebook, YouTube, TikTok, Instagram</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🌪️</div>
+        <div class="service-num">04</div>
+        <div class="service-name">Storm Chasing Media</div>
+        <div class="service-desc">Live storm chasing coverage, real-time severe weather broadcasts, and field footage for media organizations, news outlets, and weather brands.</div>
+        <div class="service-includes">
+          <div class="service-includes-label">Includes</div>
+          <div class="service-include-item">Live field broadcasts & narration</div>
+          <div class="service-include-item">Tornado & severe weather footage</div>
+          <div class="service-include-item">NWS alert integration for broadcasts</div>
+          <div class="service-include-item">Real-time radar & weather analysis</div>
+          <div class="service-include-item">Media outlet collaboration</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">📱</div>
+        <div class="service-num">05</div>
+        <div class="service-name">Social Media Strategy</div>
+        <div class="service-desc">Audience growth strategies and platform-specific campaigns built on experience scaling a brand to 300K+ followers and 183M+ views in 2025.</div>
+        <div class="service-includes">
+          <div class="service-includes-label">Includes</div>
+          <div class="service-include-item">Audience growth strategy</div>
+          <div class="service-include-item">Content calendar planning</div>
+          <div class="service-include-item">Platform-specific optimization</div>
+          <div class="service-include-item">Analytics & performance tracking</div>
+          <div class="service-include-item">Digital fundraising campaigns</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🎨</div>
+        <div class="service-num">06</div>
+        <div class="service-name">Graphic Design</div>
+        <div class="service-desc">Custom graphics for social media, branding, thumbnails, and digital campaigns — designed to stop the scroll and communicate clearly at a glance.</div>
+        <div class="service-includes">
+          <div class="service-includes-label">Includes</div>
+          <div class="service-include-item">Social media graphics & templates</div>
+          <div class="service-include-item">YouTube thumbnails</div>
+          <div class="service-include-item">Brand identity & logo design</div>
+          <div class="service-include-item">Alert & weather graphics</div>
+          <div class="service-include-item">Canva, Photoshop & AI-assisted tools</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── PROCESS ── -->
+  <section>
+    <p class="section-label">How It Works</p>
+    <h2 class="section-title" style="margin-bottom:0.5rem;">The Process</h2>
+    <p style="font-size:0.95rem;color:var(--text);line-height:1.75;max-width:500px;margin-bottom:0;">Simple, direct, and focused on getting you results.</p>
+
+    <div class="process-steps" style="display:grid;">
+      <div class="process-step">
+        <div class="process-num">01</div>
+        <div class="process-step-title">You Reach Out</div>
+        <div class="process-step-desc">Tell me what you need — a website, a tool, content, or something else. The more detail the better, but even a rough idea works.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">02</div>
+        <div class="process-step-title">We Talk It Through</div>
+        <div class="process-step-desc">I'll ask the right questions to understand your goals, timeline, and budget. No jargon, no unnecessary complexity.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">03</div>
+        <div class="process-step-title">I Build It</div>
+        <div class="process-step-desc">I get to work — using AI as a collaborator to move fast without cutting corners. You'll see progress and can give feedback along the way.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">04</div>
+        <div class="process-step-title">You Get Results</div>
+        <div class="process-step-desc">A finished product that works, looks great, and is ready to use. I stay available for tweaks and follow-up questions.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── WHY ME ── -->
+  <section>
+    <p class="section-label">Why Work With Me</p>
+    <h2 class="section-title" style="margin-bottom:2.5rem;">What Sets Me<br><span>Apart</span></h2>
+
+    <div class="feature-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);">
+      <div style="background:var(--bg2);padding:2rem;">
+        <div style="font-family:'Orbitron',monospace;font-size:0.72rem;font-weight:700;color:var(--cyan);letter-spacing:0.1em;margin-bottom:0.75rem;">I BUILD WHAT I USE</div>
+        <div style="font-size:0.9rem;color:var(--text);line-height:1.75;">Everything I offer — alert systems, live streaming tools, social content — I've built and used for my own brand. You're not getting theory, you're getting proven tools.</div>
+      </div>
+      <div style="background:var(--bg2);padding:2rem;">
+        <div style="font-family:'Orbitron',monospace;font-size:0.72rem;font-weight:700;color:var(--cyan);letter-spacing:0.1em;margin-bottom:0.75rem;">300K+ PROOF OF CONCEPT</div>
+        <div style="font-size:0.9rem;color:var(--text);line-height:1.75;">I scaled Tornado Tacklers to 300K+ followers and 183M+ views in 2025 — not with a big team or big budget, but with smart systems and consistent execution.</div>
+      </div>
+      <div style="background:var(--bg2);padding:2rem;">
+        <div style="font-family:'Orbitron',monospace;font-size:0.72rem;font-weight:700;color:var(--cyan);letter-spacing:0.1em;margin-bottom:0.75rem;">AI-ACCELERATED DELIVERY</div>
+        <div style="font-size:0.9rem;color:var(--text);line-height:1.75;">I use AI tools to build faster and smarter — meaning lower costs and faster turnaround without sacrificing quality. Complex projects don't have to take forever.</div>
+      </div>
+      <div style="background:var(--bg2);padding:2rem;">
+        <div style="font-family:'Orbitron',monospace;font-size:0.72rem;font-weight:700;color:var(--cyan);letter-spacing:0.1em;margin-bottom:0.75rem;">REAL-WORLD BACKGROUND</div>
+        <div style="font-size:0.9rem;color:var(--text);line-height:1.75;">5+ years in HR gave me strong operational instincts — I understand process, people, and how to communicate clearly. I bring that discipline to every project.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── CTA ── -->
+  <section style="text-align:center;">
+    <p class="section-label" style="justify-content:center;">Ready to Start?</p>
+    <h2 class="section-title" style="margin-bottom:1.5rem;">Let's Build<br><span>Something</span></h2>
+    <p style="font-size:1rem;line-height:1.75;color:var(--text);max-width:480px;margin:0 auto 2.5rem;">
+      Send me a message with what you have in mind and I'll get back to you.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="index.html#contact" class="cta-btn cta-primary">
+        Get In Touch
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </a>
+      <a href="about.html" class="cta-btn cta-secondary">Learn More About Me</a>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  function toggleNav() {
+    document.getElementById('nav-links').classList.toggle('open');
+    document.getElementById('hamburger').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
