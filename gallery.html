@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery — Ginger Murray</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0E0E14;--bg2:#13131C;--bg3:#1A1A28;--white:#ffffff;--ink:#E8E6F0;--ink-mid:#9490B0;--ink-dim:#504D6A;--accent:#8B5CF6;--accent-bright:#A78BFA;--border:rgba(139,92,246,0.12);--border-mid:rgba(139,92,246,0.25);}
+  *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;}
+  .nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:64px;background:rgba(14,14,20,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--white);text-decoration:none;}
+  .nav-logo span{color:var(--accent-bright);font-style:italic;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;align-items:center;}
+  .nav-links a{font-size:0.85rem;font-weight:500;color:var(--ink-mid);text-decoration:none;letter-spacing:0.03em;transition:color 0.2s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--white);}
+  .nav-links .nav-cta{background:var(--accent);color:var(--white);padding:0.5rem 1.4rem;font-size:0.8rem;font-weight:500;transition:background 0.2s;border-radius:2px;}
+  .nav-links .nav-cta:hover{background:var(--accent-bright);color:var(--bg);}
+  .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+  .nav-hamburger span{display:block;width:22px;height:2px;background:var(--ink);transition:0.3s;}
+  .nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-hamburger.open span:nth-child(2){opacity:0;}
+  .nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .nav-links.open{display:flex;}
+  .divider{height:1px;background:var(--border);}
+  .section-label{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.22em;color:var(--accent-bright);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;}
+  .section-label::after{content:'';width:32px;height:1px;background:var(--accent);opacity:0.5;}
+  .section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;line-height:1.1;color:var(--white);letter-spacing:-0.02em;}
+  .section-title em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .btn-primary{background:var(--accent);color:var(--white);padding:0.85rem 2rem;font-size:0.82rem;font-weight:500;letter-spacing:0.06em;text-decoration:none;border-radius:2px;transition:background 0.2s;display:inline-block;}
+  .btn-primary:hover{background:var(--accent-bright);color:var(--bg);}
+  .btn-secondary{background:transparent;color:var(--ink);padding:0.85rem 2rem;font-size:0.82rem;font-weight:500;letter-spacing:0.06em;text-decoration:none;border:1px solid var(--border-mid);border-radius:2px;transition:border-color 0.2s,color 0.2s;display:inline-block;}
+  .btn-secondary:hover{border-color:var(--accent-bright);color:var(--white);}
+  /* HERO */
+
+  footer { padding:2rem 6vw; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+  footer p { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.12em; color:var(--ink-dim); text-transform:uppercase; }
+
+  main { position:relative; z-index:2; }
+
+  /* GALLERY HEADER */
+  .gallery-header { padding:9rem 6vw 5rem; border-bottom:1px solid var(--border); }
+  .gallery-title { font-family:'Playfair Display',serif; font-size:clamp(3rem,7vw,6rem); font-weight:900; line-height:0.95; color:var(--white); letter-spacing:-0.02em; margin-top:1rem; }
+  .gallery-title span { font-style:italic; background:linear-gradient(135deg,var(--accent),var(--accent-bright)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .gallery-desc { font-size:1rem; line-height:1.85; color:var(--ink-mid); max-width:600px; margin-top:1.5rem; }
+
+  /* PHOTO GRID */
+  .photo-card { position:relative; overflow:hidden; cursor:pointer; background:var(--bg2); }
+  .photo-card img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; transition:transform 0.4s ease; }
+  .photo-card:hover img { transform:scale(1.03); }
+  .photo-caption { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(14,14,20,0.92)); padding:2rem 1.25rem 1rem; }
+  .photo-caption-loc { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; color:var(--white); display:block; }
+  .photo-caption-sep { display:none; }
+  .photo-caption-date { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.1em; color:var(--accent-bright); text-transform:uppercase; display:block; margin-top:4px; }
+  .photo-caption-credit { font-family:'DM Mono',monospace; font-size:0.55rem; letter-spacing:0.08em; color:var(--ink-dim); text-transform:uppercase; display:block; }
+
+  /* LIGHTBOX */
+  #lightbox-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:999; display:none; align-items:center; justify-content:center; }
+  #lightbox-overlay.active { display:flex; }
+  #lightbox-img { max-width:90vw; max-height:85vh; object-fit:contain; }
+  #lightbox-caption { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); text-align:center; }
+  #lightbox-loc { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:#fff; }
+  #lightbox-date { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.12em; color:var(--accent-bright); text-transform:uppercase; margin-top:4px; display:block; }
+  #lightbox-close { position:absolute; top:20px; right:24px; background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer; opacity:0.7; }
+  #lightbox-close:hover { opacity:1; }
+  #lightbox-prev, #lightbox-next { position:absolute; top:50%; transform:translateY(-50%); background:none; border:none; color:#fff; font-size:2rem; cursor:pointer; opacity:0.5; padding:1rem; }
+  #lightbox-prev:hover, #lightbox-next:hover { opacity:1; }
+  #lightbox-prev { left:16px; }
+  #lightbox-next { right:16px; }
+
+  @media (max-width: 768px) {
+    /* NAV */
+    .nav { padding: 0 5vw; }
+    .nav-links { display: none; flex-direction: column; gap: 0; position: fixed; top: 64px; left: 0; right: 0; background: rgba(14,14,20,0.98); border-bottom: 1px solid var(--border); padding: 1.5rem 5vw; backdrop-filter: blur(12px); z-index: 99; }
+    .nav-links.open { display: flex; }
+    .nav-links li { border-bottom: 1px solid var(--border); }
+    .nav-links li:last-child { border-bottom: none; }
+    .nav-links a { display: block; padding: 0.85rem 0; font-size: 0.85rem; }
+    .nav-links .nav-cta { border: none; padding: 0.85rem 0; background: none; color: var(--accent-bright); }
+    .nav-hamburger { display: flex; }
+
+    /* IMAGES */
+    img { max-width: 100%; height: auto; }
+    .press-grid img { width: 100%; }
+
+    /* LAYOUT STACKING */
+    .hero { grid-template-columns: 1fr !important; }
+    .hero-right { display: none; }
+    .about-section { grid-template-columns: 1fr !important; }
+    .about-text-col { border-right: none !important; border-bottom: 1px solid var(--border); }
+    .projects-grid { grid-template-columns: 1fr !important; }
+    .press-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    .contact-section { grid-template-columns: 1fr !important; }
+    .contact-left { border-right: none !important; border-bottom: 1px solid var(--border); }
+    .why-grid { grid-template-columns: 1fr !important; }
+    .process-grid { grid-template-columns: 1fr 1fr !important; }
+    .services-grid { grid-template-columns: 1fr !important; }
+    .skills-grid { grid-template-columns: 1fr !important; }
+    .edu-grid { grid-template-columns: 1fr !important; }
+    .story-grid { grid-template-columns: 1fr !important; }
+    .about-hero { grid-template-columns: 1fr !important; }
+    .about-photo-col { height: 280px; border-right: none; border-bottom: 1px solid var(--border); }
+    .feature-grid { grid-template-columns: 1fr !important; }
+
+    /* TYPOGRAPHY */
+    .hero-name { font-size: 3rem !important; }
+    .section-title { font-size: 1.8rem !important; }
+    .project-hero-title { font-size: 2.5rem !important; }
+    .gallery-title { font-size: 2.5rem !important; }
+
+    /* GALLERY GRID */
+    .photo-card img { aspect-ratio: 1/1; }
+    [style*="grid-template-columns:1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
+    [style*="grid-template-columns: 1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
+
+    /* PADDING */
+    [style*="padding:6rem 6vw"], [style*="padding: 6rem 6vw"] { padding: 3rem 5vw !important; }
+    [style*="padding:5rem 6vw"], [style*="padding: 5rem 6vw"] { padding: 3rem 5vw !important; }
+    .page-hero { padding: 6rem 5vw 3rem !important; }
+    .project-header { padding: 6rem 5vw 3rem !important; }
+    .gallery-header { padding: 6rem 5vw 3rem !important; }
+
+    /* OVERFLOW PROTECTION */
+    body { overflow-x: hidden; }
+    main { overflow-x: hidden; }
+    * { max-width: 100%; }
+    pre, code { overflow-x: auto; }
+
+    /* TIMELINE */
+    .tl-item { grid-template-columns: 65px 1px 1fr !important; gap: 0 1rem !important; }
+  }
+
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">Ginger<span>Murray</span></a>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="gallery.html" class="active">Gallery</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+
+  <!-- ── HEADER ── -->
+  <div class="gallery-header" style="padding-top:9rem;">
+    <p class="gallery-eyebrow">Field Photography · Severe Weather Documentation</p>
+    <h1 class="gallery-title">My<br><span>Gallery</span></h1>
+    <p class="gallery-desc">
+      Photos captured in the field and content created for Tornado Tacklers. Click any image to view full size.
+    </p>
+  </div>
+
+  <!-- ── CONTENT CREATION ── -->
+  <section style="padding: 5rem 6vw;">
+    <p class="section-label">Content Creation</p>
+    <h2 class="section-title">Design<br><span>Work</span></h2>
+    <p style="max-width:600px;font-size:0.95rem;line-height:1.8;color:var(--text);margin-top:1rem;margin-bottom:2.5rem;">
+      Graphic design work created for Tornado Tacklers social media campaigns — built in Canva, ChatGPT, Gemini and shared across Facebook and our other platforms, reaching hundreds of thousands of followers.
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);">
+      <div class="photo-card" onclick="openLightbox(0)">
+        <img src="content_helene_1.jpg" alt="Hurricane Helene Emergency Relief Drive graphic" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Hurricane Helene Relief Drive</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">Canva · Tornado Tacklers · 2024</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(12)">
+        <img src="content_spring_2026.jpg" alt="Meteorological Spring Facebook post" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Meteorological Spring</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">Canva · Facebook Post · March 2026</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(13)">
+        <img src="content_youtube_thumbnail.jpg" alt="YouTube thumbnail - Tornadoes in Northern Illinois" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">YouTube Thumbnail</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">AI-Assisted · March 2026</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(14)">
+        <img src="content_recruit_chasers.jpg" alt="Storm chasing Facebook recruitment post" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Storm Chaser Recruitment</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">AI on Canva · 2025</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(15)">
+        <img src="content_joplin_infographic.jpg" alt="The Joplin Tornado infographic" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">The Joplin Tornado</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">AI-Made Infographic · 2026</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(16)">
+        <img src="content_tornado_infographic.jpg" alt="How a tornado forms infographic" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">How a Tornado Forms</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">AI-Made with Gemini · 2026</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── STORM PICS ── -->
+  <section style="padding: 3rem 6vw 5rem;">
+    <p class="section-label">Storm Pics</p>
+    <h2 class="section-title">Field<br><span>Photography</span></h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:2.5rem;">
+
+      <div class="photo-card" onclick="openLightbox(1)">
+        <img src="mesocyclone_iowa_2022.jpg" alt="Mesocyclone dying out - East Central Iowa May 2022" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Mesocyclone · East Central Iowa</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">May 2022</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(2)">
+        <img src="storm_anvil_mn_2022.jpg" alt="Storm building over cornfield - Minnesota July 2022" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Storm Building · Minnesota Cornfields</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">July 2022</span>
+        </div>
+      </div>
+
+      <div class="photo-card" onclick="openLightbox(3)">
+        <img src="tornado_orangecity_2023.png" alt="First tornado - Orange City, Iowa" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">First Tornado · Orange City, IA</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">August 7, 2023</span>
+        </div>
+      </div>
+
+      <div class="photo-card" onclick="openLightbox(4)">
+        <img src="wallcloud_missouri_2023.png" alt="Wall cloud - Missouri May 2023" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Wall Cloud · Missouri</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">May 2023</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(5)">
+        <img src="wallcloud_mn_2023.jpg" alt="Wall cloud over MN farmland June 2023" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Wall Cloud · Minnesota Farmland</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">June 2023</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(6)">
+        <img src="storm_cumulonimbus_iowa_2023.jpg" alt="Glowing cumulonimbus cloud - Iowa July 2023" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Cumulonimbus · Iowa</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">July 2023</span>
+        </div>
+      </div>
+
+      <div class="photo-card" onclick="openLightbox(7)">
+        <img src="supercell_coburn.png" alt="Supercell near Coburn, ND" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Supercell · Coburn, ND</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">June 20, 2025</span>
+        </div>
+      </div>
+
+      <div class="photo-card" onclick="openLightbox(8)">
+        <img src="tornado_spiritwood_1.png" alt="Tornado near Spiritwood, ND" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Tornado · Spiritwood, ND</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">Daytime · June 20, 2025</span>
+        </div>
+      </div>
+
+      <div class="photo-card" onclick="openLightbox(9)">
+        <img src="tornado_spiritwood_2.png" alt="Tornado near Spiritwood, ND" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Tornado · Spiritwood, ND</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">Daytime · June 20, 2025</span>
+        </div>
+      </div>
+
+      <div class="photo-card" onclick="openLightbox(10)">
+        <img src="tornado_fortransom_1.png" alt="Tornado near Fort Ransom, ND" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Tornado · Fort Ransom, ND</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">Nighttime · June 20, 2025</span>
+        </div>
+      </div>
+
+      <div class="photo-card" onclick="openLightbox(11)">
+        <img src="tornado_fortransom_2.png" alt="Tornado near Fort Ransom, ND" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Tornado · Fort Ransom, ND</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">Nighttime · June 20, 2025</span>
+        </div>
+      </div>
+
+      <div class="photo-card" onclick="openLightbox(17)">
+        <img src="shelfcloud_nebraska_2025.jpg" alt="Shelf cloud - Eastern Nebraska July 2025" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Shelf Cloud · Eastern Nebraska</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">July 2025</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── LANDSCAPE & WILDLIFE ── -->
+  <section style="padding: 3rem 6vw 5rem;">
+    <p class="section-label">Landscape & Wildlife</p>
+    <h2 class="section-title">Beyond<br><span>The Storm</span></h2>
+    <p style="max-width:600px;font-size:0.95rem;line-height:1.8;color:var(--text);margin-top:1rem;margin-bottom:2.5rem;">
+      Photography from beyond the chase — landscapes, nature, and wildlife captured across Minnesota and beyond.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);">
+      <div class="photo-card" onclick="openLightbox(18)">
+        <img src="wolfcreek_waterfall_minnesota.jpg" alt="Wolfcreek Waterfall Minnesota" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Wolfcreek Waterfall · Minnesota</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">© Ginger Murray</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(19)">
+        <img src="wildlife_glacier_goats.jpg" alt="Mountain goat family - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Mountain Goats · Glacier National Park</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(20)">
+        <img src="landscape_glacier_mountain.jpg" alt="Mountain peak - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Mountain Peak · Glacier National Park</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(21)">
+        <img src="landscape_glacier_frosty.jpg" alt="Frosty mountain - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Frosty Mountain · Glacier National Park</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(22)">
+        <img src="wildlife_glacier_marmot.jpg" alt="Marmot posing - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Friendly Marmot · Glacier National Park</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(23)">
+        <img src="landscape_badlands_2022.jpg" alt="Badlands National Park 2022" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Badlands National Park</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">2022 · © Ginger Murray</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(24)">
+        <img src="landscape_glacier_forest_2020.jpg" alt="Mountain through forest - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Mountain Through Forest · Glacier NP</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(25)">
+        <img src="wildlife_glacier_rams.jpg" alt="Twin bighorn rams - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Twin Rams · Glacier National Park</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
+        </div>
+      </div>
+      <div class="photo-card" onclick="openLightbox(26)">
+        <img src="landscape_glacier_sunset_2020.jpg" alt="Sunset over mountains - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Mountain Sunset · Glacier National Park</span>
+          <span class="photo-caption-sep"></span>
+          <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── MORE COMING ── -->
+  <section style="text-align:center;padding:5rem 6vw;">
+  <div class="divider"></div>
+
+  <!-- ── MORE COMING ── -->
+    <p class="section-label" style="justify-content:center;">More Coming</p>
+    <h2 class="section-title" style="margin-bottom:1rem;">Gallery Growing<br><span>Each Chase Season</span></h2>
+    <p style="font-size:1rem;line-height:1.75;color:var(--text);max-width:480px;margin:0 auto 2rem;">
+      This gallery will be updated throughout the 2026 chase season. Follow along on social media for real-time field coverage.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="https://www.facebook.com/tornadotacklersfb" target="_blank" style="display:inline-flex;align-items:center;gap:0.6rem;font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent-bright);text-decoration:none;border:1px solid var(--border);padding:0.7rem 1.2rem;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-bright)'" onmouseout="this.style.borderColor='var(--border)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        Facebook
+      </a>
+      <a href="https://www.youtube.com/@StormStryderz67" target="_blank" style="display:inline-flex;align-items:center;gap:0.6rem;font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent-bright);text-decoration:none;border:1px solid var(--border);padding:0.7rem 1.2rem;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-bright)'" onmouseout="this.style.borderColor='var(--border)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="var(--bg)"/></svg>
+        YouTube
+      </a>
+      <a href="https://www.tiktok.com/@tornadotacklers1" target="_blank" style="display:inline-flex;align-items:center;gap:0.6rem;font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent-bright);text-decoration:none;border:1px solid var(--border);padding:0.7rem 1.2rem;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-bright)'" onmouseout="this.style.borderColor='var(--border)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        TikTok
+      </a>
+    </div>
+  </section>
+
+
+
+<div id="lightbox-overlay">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button id="lightbox-prev" onclick="changeLightbox(-1)">‹</button>
+  <img id="lightbox-img" src="" alt="">
+  <div id="lightbox-caption">
+    <div id="lightbox-loc"></div>
+    <span id="lightbox-date"></span>
+  </div>
+  <button id="lightbox-next" onclick="changeLightbox(1)">›</button>
+</div>
+
+<script>
+  var photos = [
+    { src: 'content_helene_1.jpg',         loc: 'Hurricane Helene Relief Drive',   date: 'Tornado Tacklers · 2024' },
+    { src: 'mesocyclone_iowa_2022.jpg',     loc: 'Mesocyclone · East Central Iowa', date: 'May 2022' },
+    { src: 'storm_anvil_mn_2022.jpg',       loc: 'Storm Building · MN Cornfields',  date: 'July 2022' },
+    { src: 'tornado_orangecity_2023.png',   loc: 'First Tornado · Orange City, IA', date: 'August 7, 2023' },
+    { src: 'wallcloud_missouri_2023.png',   loc: 'Wall Cloud · Missouri',           date: 'May 2023' },
+    { src: 'wallcloud_mn_2023.jpg',         loc: 'Wall Cloud · Minnesota Farmland', date: 'June 2023' },
+    { src: 'storm_cumulonimbus_iowa_2023.jpg', loc: 'Cumulonimbus · Iowa',          date: 'July 2023' },
+    { src: 'supercell_coburn.png',          loc: 'Supercell · Coburn, ND',          date: 'June 20, 2025' },
+    { src: 'tornado_spiritwood_1.png',      loc: 'Tornado · Spiritwood, ND',        date: 'Daytime · June 20, 2025' },
+    { src: 'tornado_spiritwood_2.png',      loc: 'Tornado · Spiritwood, ND',        date: 'Daytime · June 20, 2025' },
+    { src: 'tornado_fortransom_1.png',      loc: 'Tornado · Fort Ransom, ND',       date: 'Nighttime · June 20, 2025' },
+    { src: 'tornado_fortransom_2.png',      loc: 'Tornado · Fort Ransom, ND',       date: 'Nighttime · June 20, 2025' },
+    { src: 'content_spring_2026.jpg',       loc: 'Meteorological Spring',           date: 'Facebook Post · March 2026' },
+    { src: 'content_youtube_thumbnail.jpg', loc: 'YouTube Thumbnail',               date: 'AI-Assisted Design' },
+    { src: 'content_recruit_chasers.jpg',   loc: 'Storm Chaser Recruitment',        date: 'AI on Canva · 2025' },
+    { src: 'content_joplin_infographic.jpg',loc: 'The Joplin Tornado Infographic',  date: 'AI-Made · 2026' },
+    { src: 'content_tornado_infographic.jpg',loc: 'How a Tornado Forms',            date: 'AI-Made with Gemini · 2026' },
+    { src: 'shelfcloud_nebraska_2025.jpg',  loc: 'Shelf Cloud · Eastern Nebraska',  date: 'July 2025' },
+    { src: 'wolfcreek_waterfall_minnesota.jpg', loc: 'Wolfcreek Waterfall · Minnesota', date: '' },
+    { src: 'wildlife_glacier_goats.jpg',    loc: 'Mountain Goats · Glacier NP',     date: 'July 2020' },
+    { src: 'landscape_glacier_mountain.jpg',loc: 'Mountain Peak · Glacier NP',      date: 'July 2020' },
+    { src: 'landscape_glacier_frosty.jpg',  loc: 'Frosty Mountain · Glacier NP',    date: 'July 2020' },
+    { src: 'wildlife_glacier_marmot.jpg',   loc: 'Friendly Marmot · Glacier NP',    date: 'July 2020' },
+    { src: 'landscape_badlands_2022.jpg',   loc: 'Badlands National Park',          date: '2022' },
+    { src: 'landscape_glacier_forest_2020.jpg', loc: 'Mountain Through Forest · Glacier NP', date: 'July 2020' },
+    { src: 'wildlife_glacier_rams.jpg',     loc: 'Twin Rams · Glacier NP',          date: 'July 2020' },
+    { src: 'landscape_glacier_sunset_2020.jpg', loc: 'Mountain Sunset · Glacier NP', date: 'July 2020' },
+  ];
+
+  var current = 0;
+
+  function openLightbox(idx) {
+    current = idx;
+    showPhoto();
+    document.getElementById('lightbox-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function changeLightbox(dir) {
+    current = (current + dir + photos.length) % photos.length;
+    showPhoto();
+  }
+
+  function showPhoto() {
+    var p = photos[current];
+    document.getElementById('lightbox-img').src = p.src;
+    document.getElementById('lightbox-loc').textContent = p.loc;
+    document.getElementById('lightbox-date').textContent = p.date;
+  }
+
+  document.getElementById('lightbox-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') changeLightbox(-1);
+    if (e.key === 'ArrowRight') changeLightbox(1);
+  });
+</script>
+</main>
+
+<footer>
+  <p>© 2026 Ginger Murray · Wells, MN</p>
+  <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="91e2e5f0e3e5f4fafffed1f6fcf0f8
