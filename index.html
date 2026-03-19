@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ginger Murray — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0E0E14;
+    --bg2: #13131C;
+    --bg3: #1A1A28;
+    --white: #ffffff;
+    --ink: #E8E6F0;
+    --ink-mid: #9490B0;
+    --ink-dim: #504D6A;
+    --accent: #8B5CF6;
+    --accent-bright: #A78BFA;
+    --accent-dim: rgba(139,92,246,0.15);
+    --border: rgba(139,92,246,0.12);
+    --border-mid: rgba(139,92,246,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 64px;
+    background: rgba(14,14,20,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--white); text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent-bright); font-style: italic; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+  .nav-links a {
+    font-size: 0.85rem; font-weight: 500; color: var(--ink-mid);
+    text-decoration: none; letter-spacing: 0.03em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); }
+  .nav-links .nav-cta {
+    background: var(--accent); color: var(--white);
+    padding: 0.5rem 1.4rem; font-size: 0.8rem; font-weight: 500;
+    transition: background 0.2s; border-radius: 2px;
+  }
+  .nav-links .nav-cta:hover { background: var(--accent-bright); color: var(--bg); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    padding-top: 64px;
+  }
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 7rem 5vw 7rem 6vw;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  /* Subtle purple glow behind name */
+  .hero-left::before {
+    content: '';
+    position: absolute;
+    top: 30%; left: -10%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.22em;
+    color: var(--accent-bright); text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.1s;
+  }
+
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 7vw, 6.5rem);
+    font-weight: 900; line-height: 0.95;
+    color: var(--white); letter-spacing: -0.02em;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
+  }
+  .hero-name em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .hero-rule {
+    width: 50px; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin: 2.5rem 0;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.35s;
+  }
+
+  .hero-desc {
+    font-size: 1rem; line-height: 1.85; color: var(--ink-mid);
+    max-width: 460px;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.45s;
+  }
+
+  .hero-ctas {
+    display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.55s;
+  }
+  .btn-primary {
+    background: var(--accent); color: var(--white);
+    padding: 0.85rem 2rem; font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 0.06em; text-decoration: none; border-radius: 2px;
+    transition: background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--accent-bright); color: var(--bg); }
+  .btn-secondary {
+    background: transparent; color: var(--ink);
+    padding: 0.85rem 2rem; font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 0.06em; text-decoration: none;
+    border: 1px solid var(--border-mid);
+    border-radius: 2px; transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-secondary:hover { border-color: var(--accent-bright); color: var(--white); }
+
+  /* Hero right — stats */
+  .hero-right {
+    display: flex; flex-direction: column;
+    background: var(--bg2);
+  }
+  .hero-stat {
+    flex: 1; padding: 2.5rem 3.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; flex-direction: column; justify-content: center;
+    opacity: 0; animation: fadeUp 0.6s ease forwards;
+    transition: background 0.2s;
+  }
+  .hero-stat:hover { background: var(--bg3); }
+  .hero-stat:nth-child(1) { animation-delay: 0.3s; }
+  .hero-stat:nth-child(2) { animation-delay: 0.4s; }
+  .hero-stat:nth-child(3) { animation-delay: 0.5s; }
+  .hero-stat:nth-child(4) { animation-delay: 0.6s; border-bottom: none; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem; font-weight: 900;
+    color: var(--white); line-height: 1; letter-spacing: -0.02em;
+  }
+  .stat-num span {
+    background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.15em;
+    color: var(--ink-dim); text-transform: uppercase; margin-top: 0.5rem;
+  }
+
+  /* ── SHARED ── */
+  .divider { height: 1px; background: var(--border); }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.22em;
+    color: var(--accent-bright); text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::after {
+    content: ''; width: 32px; height: 1px;
+    background: var(--accent); opacity: 0.5;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900; line-height: 1.1;
+    color: var(--white); letter-spacing: -0.02em;
+  }
+  .section-title em { font-style: italic;
+    background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  /* ── ABOUT ── */
+  .about-section {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  }
+  .about-text-col {
+    padding: 6rem 6vw; border-right: 1px solid var(--border);
+  }
+  .about-text-col p {
+    font-size: 1rem; line-height: 1.85; color: var(--ink-mid); margin-top: 1.5rem;
+  }
+  .about-text-col a { margin-top: 2.5rem; display: inline-block; }
+  .about-titles-col {
+    padding: 6rem 5vw;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .about-title-item {
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--ink-mid); cursor: default;
+    transition: color 0.2s, padding-left 0.2s;
+  }
+  .about-title-item:first-child { border-top: 1px solid var(--border); }
+  .about-title-item:hover { color: var(--accent-bright); padding-left: 0.5rem; }
+
+  /* ── PROJECTS ── */
+  .projects-section { padding: 6rem 6vw; }
+  .projects-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border); margin-top: 3rem;
+  }
+  .project-card {
+    background: var(--bg2); padding: 2.5rem;
+    display: flex; flex-direction: column; gap: 1rem;
+    transition: background 0.2s;
+  }
+  .project-card:hover { background: var(--bg3); }
+  .project-num {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.15em; color: var(--accent-bright); text-transform: uppercase;
+  }
+  .project-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 700; color: var(--white);
+  }
+  .project-desc {
+    font-size: 0.88rem; line-height: 1.75; color: var(--ink-mid); flex: 1;
+  }
+  .project-link {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.12em; color: var(--accent-bright);
+    text-decoration: none; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .project-link:hover { color: var(--white); }
+
+  /* ── TECH TAGS ── */
+  .tags-section { padding: 3.5rem 6vw; background: var(--bg2); }
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .tag {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.06em; color: var(--ink-mid);
+    border: 1px solid var(--border-mid); padding: 0.35rem 0.85rem;
+    background: var(--bg3); text-transform: uppercase;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .tag:hover { border-color: var(--accent-bright); color: var(--accent-bright); }
+
+  /* ── PRESS ── */
+  .press-section { padding: 6rem 6vw; }
+  .press-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; margin-top: 3rem; align-items: center;
+  }
+  .press-img img {
+    width: 100%; display: block;
+    border: 1px solid var(--border-mid);
+    filter: saturate(0.85);
+  }
+  .press-text p {
+    font-size: 1rem; line-height: 1.85; color: var(--ink-mid); margin-top: 1.5rem;
+  }
+  .press-date {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.15em; color: var(--accent-bright);
+    text-transform: uppercase; margin-top: 2rem; display: block;
+  }
+
+  /* ── CONTACT ── */
+  .contact-section {
+    display: grid; grid-template-columns: 1fr 1fr;
+    background: var(--bg2);
+  }
+  .contact-left {
+    padding: 6rem 6vw; border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .contact-left p {
+    font-size: 1rem; line-height: 1.85; color: var(--ink-mid); margin-top: 1.5rem;
+  }
+  .contact-right { padding: 6rem 5vw; display: flex; flex-direction: column; justify-content: center; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label {
+    display: block; font-family: 'DM Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.15em;
+    color: var(--ink-dim); text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .form-group input, .form-group textarea {
+    width: 100%; background: var(--bg3);
+    border: 1px solid var(--border-mid); color: var(--ink);
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    padding: 0.75rem 1rem; outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem 6vw; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  }
+  footer p {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.12em; color: var(--ink-dim); text-transform: uppercase;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .hero, .about-section, .press-grid, .projects-grid, .contact-section { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .about-text-col, .contact-left { border-right: none; border-bottom: 1px solid var(--border); }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="#" class="nav-logo">Ginger<span>Murray</span></a>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">AI-Powered Portfolio</p>
+      <h1 class="hero-name">Ginger<br><em>Murray</em></h1>
+      <div class="hero-rule"></div>
+      <p class="hero-desc">Storm chaser, content creator, and platform builder from Wells, Minnesota. Media & Operations Director of Tornado Tacklers — 300K+ followers. Building Storm Current for spring 2026.</p>
+      <div class="hero-ctas">
+        <a href="projects.html" class="btn-primary">View Projects</a>
+        <a href="#contact" class="btn-secondary">Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-stat">
+        <div class="stat-num">300<span>K+</span></div>
+        <div class="stat-label">Total Followers</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">15<span>M+</span></div>
+        <div class="stat-label">Avg. Monthly Reach 2025</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">183<span>M</span></div>
+        <div class="stat-label">Total Views 2025</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">2.2<span>M</span></div>
+        <div class="stat-label">Content Interactions 2025</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <div class="about-section">
+    <div class="about-text-col">
+      <p class="section-label">About</p>
+      <h2 class="section-title">More Than<br>a <em>Storm Chaser</em></h2>
+      <p>Before storm chasing, I spent over a decade in Human Resources and customer service — coordinating HR operations, managing HRIS systems, and resolving issues with a people-first mindset. That foundation drives everything I build.</p>
+      <a href="about.html" class="btn-primary">Full Story</a>
+    </div>
+    <div class="about-titles-col">
+      <div class="about-title-item">Content Creator</div>
+      <div class="about-title-item">AI Integrator</div>
+      <div class="about-title-item">Platform Builder</div>
+      <div class="about-title-item">Storm Chaser</div>
+      <div class="about-title-item">HR Professional</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <section class="projects-section">
+    <p class="section-label">Work</p>
+    <h2 class="section-title">Featured<br><em>Projects</em></h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-num">Project 01</div>
+        <div class="project-name">Facebook NWS Alerts App</div>
+        <div class="project-desc">A custom Facebook app pushing live NWS alerts directly to followers' newsfeeds — custom graphics, runs 24/7.</div>
+        <a href="projects.html" class="project-link">View Project →</a>
+      </div>
+      <div class="project-card">
+        <div class="project-num">Project 02</div>
+        <div class="project-name">Storm Current Platform</div>
+        <div class="project-desc">Live streaming platform for storm chasers — React, Supabase, YouTube API, Stripe. Spring 2026 launch.</div>
+        <a href="projects.html" class="project-link">View Project →</a>
+      </div>
+      <div class="project-card">
+        <div class="project-num">Project 03</div>
+        <div class="project-name">NWS Alert Card</div>
+        <div class="project-desc">Interactive NWS alert display with 8 alert types, color-coded animations, and real-time county data for live broadcasts.</div>
+        <a href="projects.html" class="project-link">View Project →</a>
+      </div>
+      <div class="project-card">
+        <div class="project-num">Project 04</div>
+        <div class="project-name">Storm Current Live Chat</div>
+        <div class="project-desc">AI-powered live chat with NWS alert triggers, user auth, draggable panel, and mobile-friendly design.</div>
+        <a href="projects.html" class="project-link">View Project →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <div class="tags-section">
+    <p class="section-label">Tech Stack</p>
+    <div class="tags-wrap">
+      <span class="tag">React / Vite</span><span class="tag">Python</span><span class="tag">HTML / CSS / JS</span>
+      <span class="tag">Supabase</span><span class="tag">Firebase</span><span class="tag">Backblaze B2</span><span class="tag">Cloudflare</span>
+      <span class="tag">Google Cloud</span><span class="tag">Claude AI</span><span class="tag">Cursor</span><span class="tag">Google Antigravity</span><span class="tag">Amazon AWS</span>
+      <span class="tag">NWS API</span><span class="tag">YouTube API</span><span class="tag">Facebook API</span>
+      <span class="tag">OBS Studio</span><span class="tag">Streamlabs</span><span class="tag">Stripe</span>
+      
+      
+      <span class="tag">Canva</span><span class="tag">Photoshop</span><span class="tag">GitHub</span><span class="tag">Formspree</span><span class="tag">YouTube Studio</span><span class="tag">DaVinci Resolve</span><span class="tag">Meta Business Suite</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <section class="press-section">
+    <p class="section-label">Press</p>
+    <h2 class="section-title">Featured on<br><em>NewsNation</em></h2>
+    <div class="press-grid">
+      <div class="press-img">
+        <img src="newsnation_interview.png" alt="Ginger Murray on NewsNation">
+      </div>
+      <div class="press-text">
+        <p>Featured on NewsNation during their live coverage of the North Dakota tornado outbreak — speaking about storm behavior, chase strategy, and public safety.</p>
+        <span class="press-date">June 21, 2025</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="contact-section" id="contact">
+    <div class="contact-left">
+      <p class="section-label">Contact</p>
+      <h2 class="section-title">Let's Work<br><em>Together</em></h2>
+      <p>I build custom websites, AI-powered tools, and weather tech. If you have a project in mind — let's talk.</p>
+      <p style="margin-top:1.5rem;font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent-bright);">✦ Available for full-time work</p>
+    </div>
+    <div class="contact-right">
+      <form action="https://formspree.io/f/xyknppog" method="POST">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group"><label>Name</label><input type="text" name="name" required></div>
+          <div class="form-group"><label>Email</label><input type="email" name="email" required></div>
+        </div>
+        <div class="form-group"><label>Message</label><textarea name="message" required></textarea></div>
+        <button type="submit" class="btn-primary" style="border:none;cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;font-size:0.85rem;">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2026 Ginger Murray · Wells, MN</p>
+  <p><a href="/cdn-cgi/l/email-protection" class="__cf_e
