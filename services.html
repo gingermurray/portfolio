@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services — Ginger Murray</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0E0E14;--bg2:#13131C;--bg3:#1A1A28;--white:#ffffff;--ink:#E8E6F0;--ink-mid:#9490B0;--ink-dim:#504D6A;--accent:#8B5CF6;--accent-bright:#A78BFA;--border:rgba(139,92,246,0.12);--border-mid:rgba(139,92,246,0.25);}
+  *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;}
+  .nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:64px;background:rgba(14,14,20,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--white);text-decoration:none;}
+  .nav-logo span{color:var(--accent-bright);font-style:italic;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;align-items:center;}
+  .nav-links a{font-size:0.85rem;font-weight:500;color:var(--ink-mid);text-decoration:none;letter-spacing:0.03em;transition:color 0.2s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--white);}
+  .nav-links .nav-cta{background:var(--accent);color:var(--white);padding:0.5rem 1.4rem;font-size:0.8rem;font-weight:500;transition:background 0.2s;border-radius:2px;}
+  .nav-links .nav-cta:hover{background:var(--accent-bright);color:var(--bg);}
+  .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+  .nav-hamburger span{display:block;width:22px;height:2px;background:var(--ink);transition:0.3s;}
+  .nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-hamburger.open span:nth-child(2){opacity:0;}
+  .nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .nav-links.open{display:flex;}
+  .divider{height:1px;background:var(--border);}
+  .section-label{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.22em;color:var(--accent-bright);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;}
+  .section-label::after{content:'';width:32px;height:1px;background:var(--accent);opacity:0.5;}
+  .section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;line-height:1.1;color:var(--white);letter-spacing:-0.02em;}
+  .section-title em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .btn-primary{background:var(--accent);color:var(--white);padding:0.85rem 2rem;font-size:0.82rem;font-weight:500;letter-spacing:0.06em;text-decoration:none;border-radius:2px;transition:background 0.2s;display:inline-block;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  .btn-primary:hover{background:var(--accent-bright);color:var(--bg);}
+  .btn-secondary{background:transparent;color:var(--ink);padding:0.85rem 2rem;font-size:0.82rem;font-weight:500;letter-spacing:0.06em;text-decoration:none;border:1px solid var(--border-mid);border-radius:2px;transition:border-color 0.2s,color 0.2s;display:inline-block;}
+  .btn-secondary:hover{border-color:var(--accent-bright);color:var(--white);}
+  /* PAGE HERO */
+  .page-hero{padding:10rem 6vw 6rem;border-bottom:1px solid var(--border);}
+  .page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,7vw,6rem);font-weight:900;line-height:0.95;color:var(--white);letter-spacing:-0.02em;margin-top:1rem;}
+  .page-hero h1 em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .page-hero p{font-size:1rem;line-height:1.85;color:var(--ink-mid);max-width:600px;margin-top:2rem;}
+  /* SERVICES */
+  .services-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);}
+  .service-card{background:var(--bg2);padding:2.5rem;display:flex;flex-direction:column;gap:1rem;transition:background 0.2s;}
+  .service-card:hover{background:var(--bg3);}
+  .service-icon{font-size:1.8rem;}
+  .service-name{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--white);}
+  .service-desc{font-size:0.88rem;line-height:1.75;color:var(--ink-mid);flex:1;}
+  /* PROCESS */
+  .process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:3rem;}
+  .process-step{background:var(--bg2);padding:2rem;transition:background 0.2s;}
+  .process-step:hover{background:var(--bg3);}
+  .process-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.75rem;}
+  .process-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:0.5rem;}
+  .process-desc{font-size:0.85rem;line-height:1.7;color:var(--ink-mid);}
+  /* WHY ME */
+  .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3rem;align-items:start;}
+  .why-points{display:flex;flex-direction:column;gap:0;}
+  .why-point{padding:1.25rem 0;border-bottom:1px solid var(--border);font-size:0.95rem;line-height:1.7;color:var(--ink-mid);}
+  .why-point:first-child{border-top:1px solid var(--border);}
+  .why-point strong{color:var(--accent-bright);display:block;font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:0.3rem;}
+  footer{padding:2rem 6vw;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  footer p{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--ink-dim);text-transform:uppercase;}
+
+  @media (max-width: 768px) {
+    /* NAV */
+    .nav { padding: 0 5vw; }
+    .nav-links { display: none; flex-direction: column; gap: 0; position: fixed; top: 64px; left: 0; right: 0; background: rgba(14,14,20,0.98); border-bottom: 1px solid var(--border); padding: 1.5rem 5vw; backdrop-filter: blur(12px); z-index: 99; }
+    .nav-links.open { display: flex; }
+    .nav-links li { border-bottom: 1px solid var(--border); }
+    .nav-links li:last-child { border-bottom: none; }
+    .nav-links a { display: block; padding: 0.85rem 0; font-size: 0.85rem; }
+    .nav-links .nav-cta { border: none; padding: 0.85rem 0; background: none; color: var(--accent-bright); }
+    .nav-hamburger { display: flex; }
+
+    /* IMAGES */
+    img { max-width: 100%; height: auto; }
+    .press-grid img { width: 100%; }
+
+    /* LAYOUT STACKING */
+    .hero { grid-template-columns: 1fr !important; }
+    .hero-right { display: none; }
+    .about-section { grid-template-columns: 1fr !important; }
+    .about-text-col { border-right: none !important; border-bottom: 1px solid var(--border); }
+    .projects-grid { grid-template-columns: 1fr !important; }
+    .press-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    .contact-section { grid-template-columns: 1fr !important; }
+    .contact-left { border-right: none !important; border-bottom: 1px solid var(--border); }
+    .why-grid { grid-template-columns: 1fr !important; }
+    .process-grid { grid-template-columns: 1fr 1fr !important; }
+    .services-grid { grid-template-columns: 1fr !important; }
+    .skills-grid { grid-template-columns: 1fr !important; }
+    .edu-grid { grid-template-columns: 1fr !important; }
+    .story-grid { grid-template-columns: 1fr !important; }
+    .about-hero { grid-template-columns: 1fr !important; }
+    .about-photo-col { height: 280px; border-right: none; border-bottom: 1px solid var(--border); }
+    .feature-grid { grid-template-columns: 1fr !important; }
+
+    /* TYPOGRAPHY */
+    .hero-name { font-size: 3rem !important; }
+    .section-title { font-size: 1.8rem !important; }
+    .project-hero-title { font-size: 2.5rem !important; }
+    .gallery-title { font-size: 2.5rem !important; }
+
+    /* GALLERY GRID */
+    .photo-card img { aspect-ratio: 1/1; }
+    [style*="grid-template-columns:1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
+    [style*="grid-template-columns: 1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
+
+    /* PADDING */
+    [style*="padding:6rem 6vw"], [style*="padding: 6rem 6vw"] { padding: 3rem 5vw !important; }
+    [style*="padding:5rem 6vw"], [style*="padding: 5rem 6vw"] { padding: 3rem 5vw !important; }
+    .page-hero { padding: 6rem 5vw 3rem !important; }
+    .project-header { padding: 6rem 5vw 3rem !important; }
+    .gallery-header { padding: 6rem 5vw 3rem !important; }
+
+    /* OVERFLOW PROTECTION */
+    body { overflow-x: hidden; }
+    main { overflow-x: hidden; }
+    * { max-width: 100%; }
+    pre, code { overflow-x: auto; }
+
+    /* TIMELINE */
+    .tl-item { grid-template-columns: 65px 1px 1fr !important; gap: 0 1rem !important; }
+  }
+
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="nav-logo">Ginger<span>Murray</span></a>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+<main>
+  <!-- HERO -->
+  <section class="page-hero">
+    <p class="section-label">Services</p>
+    <h1>What I<br><em>Offer</em></h1>
+    <p>From custom websites to AI-powered tools and storm chasing media — I build things that work and create content that connects. Here's what I can do for you.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SERVICES -->
+  <section style="padding:6rem 6vw;">
+    <p class="section-label">What I Do</p>
+    <h2 class="section-title">Services &<br><em>Capabilities</em></h2>
+    <div class="services-grid" style="margin-top:3rem;">
+      <div class="service-card">
+        <div class="service-icon">🌐</div>
+        <div class="service-name">Web Design & Development</div>
+        <div class="service-desc">Custom websites built from scratch — responsive, fast, and designed to convert. From personal portfolios to full product sites, built with HTML/CSS/JS or React.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🤖</div>
+        <div class="service-name">AI-Powered Tools</div>
+        <div class="service-desc">Custom AI integrations built for real-world use — live alert systems, intelligent chat tools, automated data feeds, interactive widgets, and whatever you can dream up. If you can describe it, I can build it.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📡</div>
+        <div class="service-name">Live Streaming Setup</div>
+        <div class="service-desc">OBS configuration, custom overlays, alert integrations, and real-time data feeds for live broadcasts. Built for storm chasers, creators, and live event coverage.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🎨</div>
+        <div class="service-name">Graphic Design</div>
+        <div class="service-desc">Social media graphics, thumbnails, branding assets, and campaign visuals — designed in Canva and Photoshop with a focus on clarity, impact, and engagement.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📱</div>
+        <div class="service-name">Social Media & Content Strategy</div>
+        <div class="service-desc">Content planning, audience growth strategy, and platform management — drawing from experience scaling Tornado Tacklers to 300K+ followers across Facebook, YouTube, TikTok, and Instagram.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🌪️</div>
+        <div class="service-name">Storm Chasing Media</div>
+        <div class="service-desc">Field photography, video footage, and live storm coverage for news organizations, meteorology channels, and weather brands — with real-time social distribution.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PROCESS -->
+  <section style="padding:6rem 6vw;background:var(--bg2);">
+    <p class="section-label">How It Works</p>
+    <h2 class="section-title">My<br><em>Process</em></h2>
+    <div class="process-grid">
+      <div class="process-step"><div class="process-num">01</div><div class="process-title">Discover</div><div class="process-desc">We talk through your goals, audience, and what success looks like. No jargon — just a clear conversation about what you need.</div></div>
+      <div class="process-step"><div class="process-num">02</div><div class="process-title">Plan</div><div class="process-desc">I map out the approach, tools, and timeline. You know exactly what's being built and when.</div></div>
+      <div class="process-step"><div class="process-num">03</div><div class="process-title">Build</div><div class="process-desc">I get to work — designing, developing, and iterating. Regular updates so you're never in the dark.</div></div>
+      <div class="process-step"><div class="process-num">04</div><div class="process-title">Launch</div><div class="process-desc">We go live together. I handle deployment, testing, and make sure everything works before you take the wheel.</div></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- WHY ME -->
+  <section style="padding:6rem 6vw;">
+    <p class="section-label">Why Me</p>
+    <h2 class="section-title">What Sets Me<br><em>Apart</em></h2>
+    <div class="why-grid">
+      <div>
+        <p style="font-size:1rem;line-height:1.85;color:var(--ink-mid);">I'm not an agency. I'm one person who wears every hat — designer, developer, content creator, and strategist. That means faster communication, fewer handoffs, and work that's actually cohesive from start to finish.</p>
+        <p style="font-size:1rem;line-height:1.85;color:var(--ink-mid);margin-top:1.5rem;">With 10+ years in HR and customer service, I know how to listen, communicate clearly, and deliver on what I say. That people-first mindset carries into every project.</p>
+      </div>
+      <div class="why-points">
+        <div class="why-point"><strong>Real-World Results</strong>Grew an audience from 34K to 300K+, generated 183M views, and built tools that run 24/7 without babysitting.</div>
+        <div class="why-point"><strong>AI-Native Builder</strong>I use AI as a collaborator to build faster and smarter — without sacrificing quality or originality.</div>
+        <div class="why-point"><strong>Full-Stack Creative</strong>Design, code, content, and strategy — I do it all, so nothing gets lost in translation between teams.</div>
+        <div class="why-point"><strong>Available for Full-Time Work</strong>Open to full-time roles in content, social media, web development, HR, or any combination of the above.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CTA -->
+  <section style="padding:6rem 6vw;text-align:center;background:var(--bg2);">
+    <p class="section-label" style="justify-content:center;">Ready?</p>
+    <h2 class="section-title">Let's Build<br><em>Something</em></h2>
+    <p style="font-size:1rem;line-height:1.75;color:var(--ink-mid);max-width:480px;margin:1.5rem auto 2.5rem;">Have a project in mind? Let's talk about what you need and how I can help.</p>
+    <a href="index.html#contact" class="btn-primary">Get In Touch</a>
+  </section>
+</main>
+<footer>
+  <p>© 2026 Ginger Murray · Wells, MN</p>
+  <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fd8e899c8f8998969392bd9a909c9491d39e9290">[email&#160;protected]</a></p>
+</footer>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/
