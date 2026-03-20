@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Ginger Murray</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0E0E14;--bg2:#13131C;--bg3:#1A1A28;--white:#ffffff;--ink:#E8E6F0;--ink-mid:#9490B0;--ink-dim:#504D6A;--accent:#8B5CF6;--accent-bright:#A78BFA;--border:rgba(139,92,246,0.12);--border-mid:rgba(139,92,246,0.25);}
+  *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;}
+  .nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:64px;background:rgba(14,14,20,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--white);text-decoration:none;}
+  .nav-logo span{color:var(--accent-bright);font-style:italic;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;align-items:center;}
+  .nav-links a{font-size:0.85rem;font-weight:500;color:var(--ink-mid);text-decoration:none;letter-spacing:0.03em;transition:color 0.2s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--white);}
+  .nav-links .nav-cta{background:var(--accent);color:var(--white);padding:0.5rem 1.4rem;font-size:0.8rem;font-weight:500;transition:background 0.2s;border-radius:2px;}
+  .nav-links .nav-cta:hover{background:var(--accent-bright);color:var(--bg);}
+  .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+  .nav-hamburger span{display:block;width:22px;height:2px;background:var(--ink);transition:0.3s;}
+  .nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-hamburger.open span:nth-child(2){opacity:0;}
+  .nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .nav-links.open{display:flex;}
+  .divider{height:1px;background:var(--border);}
+  .section-label{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.22em;color:var(--accent-bright);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;}
+  .section-label::after{content:'';width:32px;height:1px;background:var(--accent);opacity:0.5;}
+  .section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;line-height:1.1;color:var(--white);letter-spacing:-0.02em;}
+  .section-title em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .btn-primary{background:var(--accent);color:var(--white);padding:0.85rem 2rem;font-size:0.82rem;font-weight:500;letter-spacing:0.06em;text-decoration:none;border-radius:2px;transition:background 0.2s;display:inline-block;}
+  .btn-primary:hover{background:var(--accent-bright);color:var(--bg);}
+  .btn-secondary{background:transparent;color:var(--ink);padding:0.85rem 2rem;font-size:0.82rem;font-weight:500;letter-spacing:0.06em;text-decoration:none;border:1px solid var(--border-mid);border-radius:2px;transition:border-color 0.2s,color 0.2s;display:inline-block;}
+  .btn-secondary:hover{border-color:var(--accent-bright);color:var(--white);}
+  /* HERO */
+  .about-hero{display:grid;grid-template-columns:0.5fr 1fr;min-height:80vh;padding-top:64px;}
+  .about-photo-col{border-right:1px solid var(--border);overflow:hidden;}
+  .about-photo-col img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(0.85);}
+  .about-intro-col{padding:6rem 5vw;display:flex;flex-direction:column;justify-content:center;}
+  .about-intro-col h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:900;line-height:0.95;color:var(--white);letter-spacing:-0.02em;margin-bottom:1.5rem;}
+  .about-intro-col h1 em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .about-sub{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;color:var(--ink-dim);text-transform:uppercase;margin-bottom:0.5rem;}
+  .about-desc{font-size:1rem;line-height:1.85;color:var(--ink-mid);max-width:500px;margin:1rem 0 2rem;}
+  .about-titles{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;color:var(--accent-bright);text-transform:uppercase;margin-bottom:2rem;}
+  /* STORY */
+  .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3rem;}
+  .story-grid p{font-size:1rem;line-height:1.85;color:var(--ink-mid);margin-bottom:1.5rem;}
+  /* TIMELINE */
+  .timeline{margin-top:3rem;max-width:800px;}
+  .tl-item{display:grid;grid-template-columns:80px 1px 1fr;gap:0 2rem;margin-bottom:2.5rem;}
+  .tl-year{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;color:var(--accent-bright);text-transform:uppercase;line-height:1.4;padding-top:0.15rem;text-align:right;}
+  .tl-line{position:relative;display:flex;flex-direction:column;align-items:center;}
+  .tl-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:0.2rem;}
+  .tl-connector{flex:1;width:1px;background:var(--border-mid);margin-top:4px;}
+  .tl-item:last-child .tl-connector{display:none;}
+  .tl-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:0.35rem;}
+  .tl-org{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--accent-bright);text-transform:uppercase;margin-bottom:0.6rem;}
+  .tl-desc{font-size:0.88rem;line-height:1.75;color:var(--ink-mid);}
+  /* SKILLS */
+  .skills-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:3rem;}
+  .skill-block{background:var(--bg2);padding:2rem;transition:background 0.2s;}
+  .skill-block:hover{background:var(--bg3);}
+  .skill-block-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:0.75rem;}
+  .skill-block-desc{font-size:0.85rem;line-height:1.7;color:var(--ink-mid);margin-bottom:1rem;}
+  .skill-tags{display:flex;flex-wrap:wrap;gap:0.4rem;}
+  .skill-tag{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;color:var(--ink-mid);border:1px solid var(--border-mid);padding:0.2rem 0.55rem;text-transform:uppercase;background:var(--bg3);}
+  /* ACHIEVEMENTS */
+  .achievements{display:flex;flex-direction:column;margin-top:3rem;}
+  .achievement{padding:1.5rem 0;border-bottom:1px solid var(--border);font-size:0.95rem;line-height:1.75;color:var(--ink-mid);}
+  .achievement:first-child{border-top:1px solid var(--border);}
+  .achievement strong{color:var(--accent-bright);}
+  /* EDU */
+  .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:3rem;}
+  .edu-card{background:var(--bg2);padding:2rem;transition:background 0.2s;}
+  .edu-card:hover{background:var(--bg3);}
+  .edu-degree{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:0.4rem;}
+  .edu-school{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--ink-dim);letter-spacing:0.08em;text-transform:uppercase;}
+  footer{padding:2rem 6vw;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  footer p{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;color:var(--ink-dim);text-transform:uppercase;}
+
+  @media (max-width: 768px) {
+    /* NAV */
+    .nav { padding: 0 5vw; }
+    .nav-links { display: none; flex-direction: column; gap: 0; position: fixed; top: 64px; left: 0; right: 0; width: 100%; background: rgba(14,14,20,0.98); border-bottom: 1px solid var(--border); padding: 1.5rem 5vw; backdrop-filter: blur(12px); z-index: 9999; min-height: 50px; }
+    .nav-links.open { display: flex; }
+    .nav-links li { border-bottom: 1px solid var(--border); }
+    .nav-links li:last-child { border-bottom: none; }
+    .nav-links a { display: block; padding: 0.85rem 0; font-size: 0.85rem; }
+    .nav-links .nav-cta { border: none; padding: 0.85rem 0; background: none; color: var(--accent-bright); }
+    .nav-hamburger { display: flex; }
+
+    /* IMAGES */
+    img { max-width: 100%; height: auto; }
+    .press-grid img { width: 100%; }
+
+    /* LAYOUT STACKING */
+    .hero { grid-template-columns: 1fr !important; }
+    .hero-right { display: none; }
+    .about-section { grid-template-columns: 1fr !important; }
+    .about-text-col { border-right: none !important; border-bottom: 1px solid var(--border); }
+    .projects-grid { grid-template-columns: 1fr !important; }
+    .press-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    .contact-section { grid-template-columns: 1fr !important; }
+    .contact-left { border-right: none !important; border-bottom: 1px solid var(--border); }
+    .why-grid { grid-template-columns: 1fr !important; }
+    .process-grid { grid-template-columns: 1fr 1fr !important; }
+    .services-grid { grid-template-columns: 1fr !important; }
+    .skills-grid { grid-template-columns: 1fr !important; }
+    .edu-grid { grid-template-columns: 1fr !important; }
+    .story-grid { grid-template-columns: 1fr !important; }
+    .about-hero { grid-template-columns: 1fr !important; }
+    .about-photo-col { height: 280px; border-right: none; border-bottom: 1px solid var(--border); }
+    .feature-grid { grid-template-columns: 1fr !important; }
+
+    /* TYPOGRAPHY */
+    .hero-name { font-size: 3rem !important; }
+    .section-title { font-size: 1.8rem !important; }
+    .project-hero-title { font-size: 2.5rem !important; }
+    .gallery-title { font-size: 2.5rem !important; }
+
+    /* GALLERY GRID */
+    .photo-card img { aspect-ratio: 1/1; }
+    [style*="grid-template-columns:1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
+    [style*="grid-template-columns: 1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
+
+    /* PADDING */
+    [style*="padding:6rem 6vw"], [style*="padding: 6rem 6vw"] { padding: 3rem 5vw !important; }
+    [style*="padding:5rem 6vw"], [style*="padding: 5rem 6vw"] { padding: 3rem 5vw !important; }
+    .page-hero { padding: 6rem 5vw 3rem !important; }
+    .project-header { padding: 6rem 5vw 3rem !important; }
+    .gallery-header { padding: 6rem 5vw 3rem !important; }
+
+    /* OVERFLOW PROTECTION */
+    body { overflow-x: hidden; }
+    main { overflow-x: hidden; }
+    * { max-width: 100%; }
+    pre, code { overflow-x: auto; }
+
+    /* TIMELINE */
+    .tl-item { grid-template-columns: 65px 1px 1fr !important; gap: 0 1rem !important; }
+  }
+
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="nav-logo">Ginger<span>Murray</span></a>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+<main>
+  <section class="about-hero">
+    <div class="about-photo-col"><img src="ginger_murray.jpg" alt="Ginger Murray"></div>
+    <div class="about-intro-col">
+      <p class="about-sub">Wells, Minnesota</p>
+      <h1>Ginger<br><em>Murray</em></h1>
+      <p class="about-titles">Content Creator · AI Integrator · Platform Builder · Storm Chaser</p>
+      <p class="about-desc">Storm chaser, content creator, and self-taught platform builder. I chase severe weather across the Upper Midwest, build AI-powered tools, and create content that reaches millions — all driven by a lifelong obsession with the sky.</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <a href="projects.html" class="btn-primary">View My Work</a>
+        <a href="index.html#contact" class="btn-secondary">Get In Touch</a>
+      </div>
+    </div>
+  </section>
+  <div class="divider"></div>
+  <section style="padding:6rem 6vw;">
+    <p class="section-label">Origin</p>
+    <h2 class="section-title">The Story<br><em>So Far</em></h2>
+    <div class="story-grid">
+      <div>
+        <p>Before storm chasing, storytelling, and content creation, I spent over a decade in Human Resources and customer service — coordinating HR operations, managing HRIS systems, running onboarding and offboarding, keeping organizations compliant, and resolving issues with a people-first mindset. Whether I was helping an employee navigate benefits enrollment or guiding a customer through a complex problem, the throughline was always the same: listen, understand, solve.</p>
+        <p>That experience gave me a deep respect for systems, processes, and communication — skills that translate directly into leading a 30-chaser operation and building platforms designed around real users.</p>
+        <p>Growing up in Minnesota, intense weather was just part of life. Towering clouds building on the horizon, the smell of rain rolling in, wind picking up with that unmistakable charge in the air, severe thunderstorm watch boxes flashing across the local news, the wail of tornado sirens cutting through the stillness. I was captivated by all of it. What started as childhood curiosity grew into a deep passion and eventually became my life's calling.</p>
+        <p>I started chasing seriously in 2022 and joined Tornado Tacklers in 2024 — a network of dedicated storm chasers committed to documenting severe weather and keeping communities informed. I now serve as Media & Operations Director, coordinating chases and managing a media presence that's grown to over 300,000 followers, 183 million views, and 15 million monthly reach. In just a few seasons, I've witnessed 15 tornadoes firsthand — each one a reminder of why this work matters.</p>
+      </div>
+      <div>
+        <p>I produce all creative assets independently — graphic design, photography, video editing, and live broadcast production — using tools like Canva, Photoshop, DaVinci Resolve, and OBS Studio. From hosting live storm-chasing broadcasts with radar overlays and real-time commentary to designing state-specific severe weather graphics that boosted warning click-through rates by 15%, everything I create is built to inform, engage, and keep communities safe.</p>
+        <p>On June 20, 2025, I documented multiple tornadoes across North Dakota — from Spiritwood during the day to Fort Ransom after dark. The next morning, I was featured on NewsNation to discuss the outbreak. It was a defining moment that brought everything together: the chasing, the content, the reach.</p>
+        <p>Along the way, I discovered something unexpected: building the technology behind the content was just as thrilling as the chase itself. I built a custom weather alert system using NWS API data feeds to deliver real-time severe weather warnings to thousands of followers. That led to deeper work with API integrations, live streaming infrastructure, and AI-powered tools — all self-taught by doing, using AI as a collaborator to turn ideas into working code.</p>
+        <p>Now I'm building Storm Current — a social platform for storm chasers, weather enthusiasts, and followers launching spring 2026 — while continuing to chase, create, and push the Tornado Tacklers brand to new heights.</p>
+      </div>
+    </div>
+  </section>
+  <div class="divider"></div>
+  <section style="padding:6rem 6vw;background:var(--bg2);">
+    <p class="section-label">Experience</p>
+    <h2 class="section-title">How I Got<br><em>Here</em></h2>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-year">2026<br>Present</div><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div class="tl-content"><div class="tl-title">Storm Current — Platform Builder</div><div class="tl-org">Storm Current · Launch Spring 2026</div><div class="tl-desc">Building a live streaming platform for storm chasers — React/Vite, Supabase, YouTube API, Backblaze B2, Stripe subscriptions, and an OBS-inspired interactive UI with draggable chat and clickable alert panels.</div></div></div>
+      <div class="tl-item"><div class="tl-year">2024<br>Present</div><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div class="tl-content"><div class="tl-title">Media & Operations Director — Tornado Tacklers</div><div class="tl-org">Tornado Tacklers · 2024 – Present</div><div class="tl-desc">Appointed Media & Operations Director of Tornado Tacklers — coordinating chases, managing operations, and overseeing a media presence that has grown to 300K+ followers, 183M+ views, and 15M+ monthly reach. Featured on NewsNation June 2025 for North Dakota tornado outbreak coverage.</div></div></div>
+      <div class="tl-item"><div class="tl-year">2025</div><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div class="tl-content"><div class="tl-title">Facebook NWS Weather Alerts App</div><div class="tl-org">Tornado Tacklers · Feb – Mar 2025</div><div class="tl-desc">Built and launched a custom Facebook app using the Facebook Developer API and NWS data feeds to automatically push live severe weather alerts directly into followers' newsfeeds — with custom Canva-designed graphics for each alert type. Runs 24/7 via VS Code.</div></div></div>
+      <div class="tl-item"><div class="tl-year">2025</div><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div class="tl-content"><div class="tl-title">Digital Marketing Nanodegree</div><div class="tl-org">Udacity · Jun – Sep 2025</div><div class="tl-desc">Completed a comprehensive digital marketing program covering SEO, social media strategy, content marketing, and analytics — applied directly to growing the Tornado Tacklers brand.</div></div></div>
+      <div class="tl-item"><div class="tl-year">2022</div><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div class="tl-content"><div class="tl-title">Began Storm Chasing</div><div class="tl-org">Independent · 2022</div><div class="tl-desc">Started actively chasing severe weather across Minnesota and Iowa. Witnessed my first tornado in Orange City, Iowa and developed field skills in radar interpretation, storm positioning, and real-time weather analysis.</div></div></div>
+      <div class="tl-item"><div class="tl-year">10+<br>Years</div><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div class="tl-content"><div class="tl-title">HR Professional & Customer Service</div><div class="tl-org">Various Organizations</div><div class="tl-desc">Over a decade in HR coordination and management — HRIS administration, onboarding and offboarding, compliance, employee relations, and people-first problem solving.</div></div></div>
+      <div class="tl-item"><div class="tl-year">Earlier</div><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div class="tl-content"><div class="tl-title">Graphic Arts Professional Diploma</div><div class="tl-org">Penn Foster</div><div class="tl-desc">Formal training in graphic arts and visual design — the foundation for independently producing all creative assets across Tornado Tacklers and client projects.</div></div></div>
+    </div>
+  </section>
+  <div class="divider"></div>
+  <section style="padding:6rem 6vw;">
+    <p class="section-label">Skills</p>
+    <h2 class="section-title">What I<br><em>Bring</em></h2>
+    <div class="skills-grid">
+      <div class="skill-block"><div class="skill-block-title">Storm Chasing</div><div class="skill-block-desc">Active chaser across the Upper Midwest. Reads radar, satellite, and mesoscale data in real time to position for optimal documentation.</div><div class="skill-tags"><span class="skill-tag">Radar Analysis</span><span class="skill-tag">NWS API</span><span class="skill-tag">RadarOmega</span><span class="skill-tag">RadarScope</span><span class="skill-tag">Storm Positioning</span></div></div>
+      <div class="skill-block"><div class="skill-block-title">Platform Development</div><div class="skill-block-desc">Builds full-stack web platforms using AI as a coding collaborator — from React frontends to Supabase backends, API integrations, and Stripe payment flows.</div><div class="skill-tags"><span class="skill-tag">React / Vite</span><span class="skill-tag">Python</span><span class="skill-tag">HTML / CSS</span><span class="skill-tag">Supabase</span><span class="skill-tag">Firebase</span><span class="skill-tag">Cloudflare</span><span class="skill-tag">GitHub</span></div></div>
+      <div class="skill-block"><div class="skill-block-title">AI-Powered Building</div><div class="skill-block-desc">Uses Claude, Cursor, and VS Code to translate visual ideas into working production code — without traditional dev training.</div><div class="skill-tags"><span class="skill-tag">Claude</span><span class="skill-tag">Cursor</span><span class="skill-tag">Google Antigravity</span><span class="skill-tag">VS Code</span></div></div>
+      <div class="skill-block"><div class="skill-block-title">Content & Media</div><div class="skill-block-desc">End-to-end content production — video editing, graphic design, live streaming, and social strategy that scaled Tornado Tacklers to 300K+ followers.</div><div class="skill-tags"><span class="skill-tag">DaVinci Resolve</span><span class="skill-tag">CapCut</span><span class="skill-tag">OBS Studio</span><span class="skill-tag">Streamlabs</span><span class="skill-tag">Canva</span><span class="skill-tag">Photoshop</span><span class="skill-tag">Facebook</span><span class="skill-tag">TikTok</span><span class="skill-tag">Instagram</span><span class="skill-tag">X (Twitter)</span><span class="skill-tag">YouTube</span></div></div>
+      <div class="skill-block"><div class="skill-block-title">Cloud & Infrastructure</div><div class="skill-block-desc">Familiar with major cloud platforms for hosting, storage, and deployment — applying the right tools to keep projects fast and scalable.</div><div class="skill-tags"><span class="skill-tag">Google Cloud</span><span class="skill-tag">Amazon AWS</span><span class="skill-tag">Backblaze B2</span></div></div>
+      <div class="skill-block"><div class="skill-block-title">Human Resources & Customer Service</div><div class="skill-block-desc">Over a decade across various organizations — HRIS management, onboarding, offboarding, compliance, and people-first problem solving.</div><div class="skill-tags"><span class="skill-tag">HRIS</span><span class="skill-tag">Onboarding</span><span class="skill-tag">Compliance</span><span class="skill-tag">Employee Relations</span></div></div>
+    </div>
+  </section>
+  <div class="divider"></div>
+  <section style="padding:6rem 6vw;background:var(--bg2);">
+    <p class="section-label">Highlights</p>
+    <h2 class="section-title">Key<br><em>Achievements</em></h2>
+    <div class="achievements">
+      <div class="achievement">Grew Tornado Tacklers from 34K followers in 2024 to <strong>234K+</strong> in 2026 on Facebook alone — <strong>300K+</strong> across Facebook, YouTube, TikTok & Instagram combined.</div>
+      <div class="achievement">Featured on <strong>NewsNation</strong> on June 21, 2025 for live coverage of the North Dakota tornado outbreak — speaking about storm behavior, chase strategy, and public safety.</div>
+      <div class="achievement">Built a <strong>Facebook NWS Alerts App</strong> using the Facebook Developer API that automatically pushes live severe weather alerts to followers' newsfeeds 24/7.</div>
+      <div class="achievement">Boosted warning click-through rates by <strong>15%</strong> through state-specific severe weather graphics tailored for Facebook newsfeeds.</div>
+      <div class="achievement">Raised <strong>$1,000+</strong> for Hurricane Helene disaster relief through a targeted digital fundraising campaign built on audience trust and social analytics.</div>
+      <div class="achievement">Generated <strong>183.3M total views</strong> and <strong>2.2M content interactions</strong> in 2025 through consistent storm coverage and live broadcast content.</div>
+    </div>
+  </section>
+  <div class="divider"></div>
+  <section style="padding:6rem 6vw;">
+    <p class="section-label">Education</p>
+    <h2 class="section-title">Formal<br><em>Training</em></h2>
+    <div class="edu-grid">
+      <div class="edu-card"><div class="edu-degree">Digital Marketing Nanodegree</div><div class="edu-school">Udacity · Jun – Sep 2025</div></div>
+      <div class="edu-card"><div class="edu-degree">Graphic Arts Professional Diploma</div><div class="edu-school">Penn Foster</div></div>
+    </div>
+  </section>
+  <div class="divider"></div>
+  <section style="padding:6rem 6vw;text-align:center;background:var(--bg2);">
+    <p class="section-label" style="justify-content:center;">What's Next</p>
+    <h2 class="section-title">Ready to<br><em>Work Together?</em></h2>
+    <p style="font-size:1rem;line-height:1.75;color:var(--ink-mid);max-width:500px;margin:1.5rem auto 2.5rem;">Whether you need a website, an AI-powered tool, storm chasing media, or content strategy — I'd love to hear about your project.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="services.html" class="btn-primary">View Services</a>
+      <a href="index.html#contact" class="btn-secondary">Get In Touch</a>
+    </div>
+  </section>
+</main>
+<footer>
+  <p>© 2026 Ginger Murray · Wells, MN</p>
+  <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e09394819294858b8e8fa
