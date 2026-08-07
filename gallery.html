@@ -47,9 +47,27 @@
 
   /* PHOTO GRID */
   .photo-card { position:relative; overflow:hidden; cursor:pointer; background:var(--bg2); }
-  .photo-card img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; transition:transform 0.4s ease; }
-  .photo-card:hover img { transform:scale(1.03); }
-  .photo-caption { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(14,14,20,0.92)); padding:2rem 1.25rem 1rem; }
+  .photo-card img,
+  .photo-card video { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; transition:transform 0.4s ease; }
+  .photo-card:hover img,
+  .photo-card:hover video { transform:scale(1.03); }
+  .photo-card .play-badge {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:56px; height:56px; border-radius:50%;
+    background:rgba(14,14,20,0.72); border:1px solid rgba(167,139,250,0.55);
+    display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:2;
+    box-shadow:0 8px 24px rgba(0,0,0,0.35);
+  }
+  .photo-card .play-badge::after {
+    content:''; display:block;
+    width:0; height:0;
+    border-left:14px solid var(--accent-bright);
+    border-top:9px solid transparent;
+    border-bottom:9px solid transparent;
+    margin-left:3px;
+  }
+  .photo-caption { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(14,14,20,0.92)); padding:2rem 1.25rem 1rem; z-index:2; }
   .photo-caption-loc { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; color:var(--white); display:block; }
   .photo-caption-sep { display:none; }
   .photo-caption-date { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.1em; color:var(--accent-bright); text-transform:uppercase; display:block; margin-top:4px; }
@@ -58,7 +76,9 @@
   /* LIGHTBOX */
   #lightbox-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000; display:none; align-items:center; justify-content:center; padding:1rem; }
   #lightbox-overlay.active { display:flex; }
-  #lightbox-img { max-width:min(90vw, 1400px); max-height:85vh; width:auto; height:auto; object-fit:contain; }
+  #lightbox-img,
+  #lightbox-video { max-width:min(90vw, 1400px); max-height:85vh; width:auto; height:auto; object-fit:contain; }
+  #lightbox-video { display:none; background:#000; }
   #lightbox-caption { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); text-align:center; max-width:90vw; padding:0 1rem; pointer-events:none; }
   #lightbox-loc { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:#fff; }
   #lightbox-date { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.12em; color:var(--accent-bright); text-transform:uppercase; margin-top:4px; display:block; }
@@ -110,7 +130,10 @@
     .gallery-title { font-size: 2.5rem !important; }
 
     /* GALLERY GRID */
-    .photo-card img { aspect-ratio: 1/1; }
+    .photo-card img,
+    .photo-card video { aspect-ratio: 1/1; }
+    #lightbox-img,
+    #lightbox-video { max-width: 92vw !important; max-height: 80vh !important; }
     [style*="grid-template-columns:1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
     [style*="grid-template-columns: 1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
 
@@ -125,7 +148,8 @@
     body { overflow-x: hidden; }
     main { overflow-x: hidden; }
     #lightbox-overlay, #lightbox-overlay * { max-width: none; }
-    #lightbox-img { max-width: 92vw !important; max-height: 80vh !important; }
+    #lightbox-img,
+    #lightbox-video { max-width: 92vw !important; max-height: 80vh !important; }
     pre, code { overflow-x: auto; }
 
     /* TIMELINE */
@@ -196,6 +220,14 @@
       Graphic design and social media content created for Tornado Tacklers and beyond — built in Canva, Photoshop, and Lightroom, reaching hundreds of thousands of followers across platforms.
     </p>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);">
+      <div class="photo-card" data-type="video" data-src="be_ready.mp4">
+        <video src="be_ready.mp4" muted preload="metadata" playsinline></video>
+        <span class="play-badge" aria-hidden="true"></span>
+        <div class="photo-caption">
+          <span class="photo-caption-loc">Be Ready</span>
+          <span class="photo-caption-date">Video · Severe Weather Preparedness · 2026</span>
+        </div>
+      </div>
       <div class="photo-card">
         <img src="Tornado_Did_You_Know_card.jpg" alt="Did You Know? Tornado Fact Card" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
@@ -540,6 +572,7 @@
   <button id="lightbox-close" onclick="closeLightbox()">✕</button>
   <button id="lightbox-prev" onclick="changeLightbox(-1)">‹</button>
   <img id="lightbox-img" src="" alt="">
+  <video id="lightbox-video" controls playsinline></video>
   <div id="lightbox-caption">
     <div id="lightbox-loc"></div>
     <span id="lightbox-date"></span>
@@ -551,16 +584,30 @@
   var cards = Array.prototype.slice.call(document.querySelectorAll('.photo-card'));
   var photos = cards.map(function(card) {
     var img = card.querySelector('img');
+    var video = card.querySelector('video');
     var locEl = card.querySelector('.photo-caption-loc');
     var dateEl = card.querySelector('.photo-caption-date');
+    var isVideo = card.getAttribute('data-type') === 'video' || !!video;
+    var src = card.getAttribute('data-src') ||
+      (img ? img.getAttribute('src') : '') ||
+      (video ? video.getAttribute('src') : '');
     return {
-      src: img ? img.getAttribute('src') : '',
+      src: src,
+      type: isVideo ? 'video' : 'image',
       loc: locEl ? locEl.textContent.trim() : (img ? img.alt : ''),
       date: dateEl ? dateEl.textContent.trim() : ''
     };
   });
 
   var current = 0;
+  var lightboxImg = document.getElementById('lightbox-img');
+  var lightboxVideo = document.getElementById('lightbox-video');
+
+  function stopLightboxVideo() {
+    lightboxVideo.pause();
+    lightboxVideo.removeAttribute('src');
+    lightboxVideo.load();
+  }
 
   function openLightbox(idx) {
     if (idx < 0 || idx >= photos.length || !photos[idx].src) return;
@@ -571,6 +618,7 @@
   }
 
   function closeLightbox() {
+    stopLightboxVideo();
     document.getElementById('lightbox-overlay').classList.remove('active');
     document.body.style.overflow = '';
   }
@@ -582,16 +630,30 @@
 
   function showPhoto() {
     var p = photos[current];
-    document.getElementById('lightbox-img').src = p.src;
-    document.getElementById('lightbox-img').alt = p.loc;
     document.getElementById('lightbox-loc').textContent = p.loc;
     document.getElementById('lightbox-date').textContent = p.date;
+
+    if (p.type === 'video') {
+      stopLightboxVideo();
+      lightboxImg.style.display = 'none';
+      lightboxImg.removeAttribute('src');
+      lightboxVideo.style.display = 'block';
+      lightboxVideo.src = p.src;
+      lightboxVideo.play().catch(function() {});
+    } else {
+      stopLightboxVideo();
+      lightboxVideo.style.display = 'none';
+      lightboxImg.style.display = 'block';
+      lightboxImg.src = p.src;
+      lightboxImg.alt = p.loc;
+    }
   }
 
   cards.forEach(function(card, idx) {
+    var label = photos[idx].type === 'video' ? 'Play ' : 'View ';
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
-    card.setAttribute('aria-label', 'View ' + (photos[idx].loc || 'image') + ' full size');
+    card.setAttribute('aria-label', label + (photos[idx].loc || 'media'));
     card.addEventListener('click', function() { openLightbox(idx); });
     card.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' || e.key === ' ') {
