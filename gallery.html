@@ -56,15 +56,15 @@
   .photo-caption-credit { font-family:'DM Mono',monospace; font-size:0.55rem; letter-spacing:0.08em; color:var(--ink-dim); text-transform:uppercase; display:block; }
 
   /* LIGHTBOX */
-  #lightbox-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:999; display:none; align-items:center; justify-content:center; }
+  #lightbox-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000; display:none; align-items:center; justify-content:center; padding:1rem; }
   #lightbox-overlay.active { display:flex; }
-  #lightbox-img { max-width:90vw; max-height:85vh; object-fit:contain; }
-  #lightbox-caption { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); text-align:center; }
+  #lightbox-img { max-width:min(90vw, 1400px); max-height:85vh; width:auto; height:auto; object-fit:contain; }
+  #lightbox-caption { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); text-align:center; max-width:90vw; padding:0 1rem; pointer-events:none; }
   #lightbox-loc { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:#fff; }
   #lightbox-date { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.12em; color:var(--accent-bright); text-transform:uppercase; margin-top:4px; display:block; }
-  #lightbox-close { position:absolute; top:20px; right:24px; background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer; opacity:0.7; }
+  #lightbox-close { position:absolute; top:20px; right:24px; background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer; opacity:0.7; z-index:1; }
   #lightbox-close:hover { opacity:1; }
-  #lightbox-prev, #lightbox-next { position:absolute; top:50%; transform:translateY(-50%); background:none; border:none; color:#fff; font-size:2rem; cursor:pointer; opacity:0.5; padding:1rem; }
+  #lightbox-prev, #lightbox-next { position:absolute; top:50%; transform:translateY(-50%); background:none; border:none; color:#fff; font-size:2rem; cursor:pointer; opacity:0.5; padding:1rem; z-index:1; }
   #lightbox-prev:hover, #lightbox-next:hover { opacity:1; }
   #lightbox-prev { left:16px; }
   #lightbox-next { right:16px; }
@@ -124,7 +124,8 @@
     /* OVERFLOW PROTECTION */
     body { overflow-x: hidden; }
     main { overflow-x: hidden; }
-    * { max-width: 100%; }
+    #lightbox-overlay, #lightbox-overlay * { max-width: none; }
+    #lightbox-img { max-width: 92vw !important; max-height: 80vh !important; }
     pre, code { overflow-x: auto; }
 
     /* TIMELINE */
@@ -265,35 +266,35 @@
           <span class="photo-caption-date">Canva · YouTube · Tornado Tacklers</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(0)">
+      <div class="photo-card">
         <img src="content_helene_1.jpg" alt="Hurricane Helene Emergency Relief Drive graphic" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Hurricane Helene Relief Drive</span>
           <span class="photo-caption-date">Canva · Tornado Tacklers · 2024</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(12)">
+      <div class="photo-card">
         <img src="content_spring_2026.jpg" alt="Meteorological Spring Facebook post" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Meteorological Spring</span>
           <span class="photo-caption-date">Canva · Facebook Post · March 2026</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(14)">
+      <div class="photo-card">
         <img src="content_recruit_chasers.jpg" alt="Storm chasing Facebook recruitment post" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Storm Chaser Recruitment</span>
           <span class="photo-caption-date">AI on Canva · 2025</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(15)">
+      <div class="photo-card">
         <img src="content_joplin_infographic.jpg" alt="The Joplin Tornado infographic" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">The Joplin Tornado</span>
           <span class="photo-caption-date">AI-Made Infographic · 2026</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(16)">
+      <div class="photo-card">
         <img src="content_tornado_infographic.jpg" alt="How a tornado forms infographic" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">How a Tornado Forms</span>
@@ -312,7 +313,7 @@
 
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:2.5rem;">
 
-      <div class="photo-card" onclick="openLightbox(1)">
+      <div class="photo-card">
         <img src="mesocyclone_iowa_2022.jpg" alt="Mesocyclone dying out - East Central Iowa May 2022" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Mesocyclone · East Central Iowa</span>
@@ -320,7 +321,7 @@
           <span class="photo-caption-date">May 2022</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(2)">
+      <div class="photo-card">
         <img src="storm_anvil_mn_2022.jpg" alt="Storm building over cornfield - Minnesota July 2022" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Storm Building · Minnesota Cornfields</span>
@@ -329,7 +330,7 @@
         </div>
       </div>
 
-      <div class="photo-card" onclick="openLightbox(3)">
+      <div class="photo-card">
         <img src="tornado_orangecity_2023.png" alt="First tornado - Orange City, Iowa" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">First Tornado · Orange City, IA</span>
@@ -338,7 +339,7 @@
         </div>
       </div>
 
-      <div class="photo-card" onclick="openLightbox(4)">
+      <div class="photo-card">
         <img src="wallcloud_missouri_2023.png" alt="Wall cloud - Missouri May 2023" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Wall Cloud · Missouri</span>
@@ -346,7 +347,7 @@
           <span class="photo-caption-date">May 2023</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(5)">
+      <div class="photo-card">
         <img src="wallcloud_mn_2023.jpg" alt="Wall cloud over MN farmland June 2023" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Wall Cloud · Minnesota Farmland</span>
@@ -354,7 +355,7 @@
           <span class="photo-caption-date">June 2023</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(6)">
+      <div class="photo-card">
         <img src="storm_cumulonimbus_iowa_2023.jpg" alt="Glowing cumulonimbus cloud - Iowa July 2023" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Cumulonimbus · Iowa</span>
@@ -363,7 +364,7 @@
         </div>
       </div>
 
-      <div class="photo-card" onclick="openLightbox(7)">
+      <div class="photo-card">
         <img src="supercell_coburn.png" alt="Supercell near Coburn, ND" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Supercell · Coburn, ND</span>
@@ -372,7 +373,7 @@
         </div>
       </div>
 
-      <div class="photo-card" onclick="openLightbox(8)">
+      <div class="photo-card">
         <img src="tornado_spiritwood_1.png" alt="Tornado near Spiritwood, ND" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Tornado · Spiritwood, ND</span>
@@ -381,7 +382,7 @@
         </div>
       </div>
 
-      <div class="photo-card" onclick="openLightbox(9)">
+      <div class="photo-card">
         <img src="tornado_spiritwood_2.png" alt="Tornado near Spiritwood, ND" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Tornado · Spiritwood, ND</span>
@@ -390,7 +391,7 @@
         </div>
       </div>
 
-      <div class="photo-card" onclick="openLightbox(10)">
+      <div class="photo-card">
         <img src="tornado_fortransom_1.png" alt="Tornado near Fort Ransom, ND" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Tornado · Fort Ransom, ND</span>
@@ -399,7 +400,7 @@
         </div>
       </div>
 
-      <div class="photo-card" onclick="openLightbox(11)">
+      <div class="photo-card">
         <img src="tornado_fortransom_2.png" alt="Tornado near Fort Ransom, ND" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Tornado · Fort Ransom, ND</span>
@@ -408,7 +409,7 @@
         </div>
       </div>
 
-      <div class="photo-card" onclick="openLightbox(17)">
+      <div class="photo-card">
         <img src="shelfcloud_nebraska_2025.jpg" alt="Shelf cloud - Eastern Nebraska July 2025" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Shelf Cloud · Eastern Nebraska</span>
@@ -430,7 +431,7 @@
       Photography from beyond the chase — landscapes, nature, and wildlife captured across Minnesota and beyond.
     </p>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);">
-      <div class="photo-card" onclick="openLightbox(18)">
+      <div class="photo-card">
         <img src="wolfcreek_waterfall_minnesota.jpg" alt="Wolfcreek Waterfall Minnesota" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Wolfcreek Waterfall · Minnesota</span>
@@ -438,7 +439,7 @@
           <span class="photo-caption-date">© Ginger Murray</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(19)">
+      <div class="photo-card">
         <img src="wildlife_glacier_goats.jpg" alt="Mountain goat family - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Mountain Goats · Glacier National Park</span>
@@ -446,7 +447,7 @@
           <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(20)">
+      <div class="photo-card">
         <img src="landscape_glacier_mountain.jpg" alt="Mountain peak - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Mountain Peak · Glacier National Park</span>
@@ -454,7 +455,7 @@
           <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(21)">
+      <div class="photo-card">
         <img src="landscape_glacier_frosty.jpg" alt="Frosty mountain - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Frosty Mountain · Glacier National Park</span>
@@ -462,7 +463,7 @@
           <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(22)">
+      <div class="photo-card">
         <img src="wildlife_glacier_marmot.jpg" alt="Marmot posing - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Friendly Marmot · Glacier National Park</span>
@@ -470,7 +471,7 @@
           <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(23)">
+      <div class="photo-card">
         <img src="landscape_badlands_2022.jpg" alt="Badlands National Park 2022" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Badlands National Park</span>
@@ -478,7 +479,7 @@
           <span class="photo-caption-date">2022 · © Ginger Murray</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(24)">
+      <div class="photo-card">
         <img src="landscape_glacier_forest_2020.jpg" alt="Mountain through forest - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Mountain Through Forest · Glacier NP</span>
@@ -486,7 +487,7 @@
           <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(25)">
+      <div class="photo-card">
         <img src="wildlife_glacier_rams.jpg" alt="Twin bighorn rams - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Twin Rams · Glacier National Park</span>
@@ -494,7 +495,7 @@
           <span class="photo-caption-date">July 2020 · © Ginger Murray</span>
         </div>
       </div>
-      <div class="photo-card" onclick="openLightbox(26)">
+      <div class="photo-card">
         <img src="landscape_glacier_sunset_2020.jpg" alt="Sunset over mountains - Glacier National Park" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
         <div class="photo-caption">
           <span class="photo-caption-loc">Mountain Sunset · Glacier National Park</span>
@@ -547,39 +548,22 @@
 </div>
 
 <script>
-  var photos = [
-    { src: 'content_helene_1.jpg',         loc: 'Hurricane Helene Relief Drive',   date: 'Tornado Tacklers · 2024' },
-    { src: 'mesocyclone_iowa_2022.jpg',     loc: 'Mesocyclone · East Central Iowa', date: 'May 2022' },
-    { src: 'storm_anvil_mn_2022.jpg',       loc: 'Storm Building · MN Cornfields',  date: 'July 2022' },
-    { src: 'tornado_orangecity_2023.png',   loc: 'First Tornado · Orange City, IA', date: 'August 7, 2023' },
-    { src: 'wallcloud_missouri_2023.png',   loc: 'Wall Cloud · Missouri',           date: 'May 2023' },
-    { src: 'wallcloud_mn_2023.jpg',         loc: 'Wall Cloud · Minnesota Farmland', date: 'June 2023' },
-    { src: 'storm_cumulonimbus_iowa_2023.jpg', loc: 'Cumulonimbus · Iowa',          date: 'July 2023' },
-    { src: 'supercell_coburn.png',          loc: 'Supercell · Coburn, ND',          date: 'June 20, 2025' },
-    { src: 'tornado_spiritwood_1.png',      loc: 'Tornado · Spiritwood, ND',        date: 'Daytime · June 20, 2025' },
-    { src: 'tornado_spiritwood_2.png',      loc: 'Tornado · Spiritwood, ND',        date: 'Daytime · June 20, 2025' },
-    { src: 'tornado_fortransom_1.png',      loc: 'Tornado · Fort Ransom, ND',       date: 'Nighttime · June 20, 2025' },
-    { src: 'tornado_fortransom_2.png',      loc: 'Tornado · Fort Ransom, ND',       date: 'Nighttime · June 20, 2025' },
-    { src: 'content_spring_2026.jpg',       loc: 'Meteorological Spring',           date: 'Facebook Post · March 2026' },
-    { src: 'content_youtube_thumbnail.jpg', loc: 'YouTube Thumbnail',               date: 'AI-Assisted Design' },
-    { src: 'content_recruit_chasers.jpg',   loc: 'Storm Chaser Recruitment',        date: 'AI on Canva · 2025' },
-    { src: 'content_joplin_infographic.jpg',loc: 'The Joplin Tornado Infographic',  date: 'AI-Made · 2026' },
-    { src: 'content_tornado_infographic.jpg',loc: 'How a Tornado Forms',            date: 'AI-Made with Gemini · 2026' },
-    { src: 'shelfcloud_nebraska_2025.jpg',  loc: 'Shelf Cloud · Eastern Nebraska',  date: 'July 2025' },
-    { src: 'wolfcreek_waterfall_minnesota.jpg', loc: 'Wolfcreek Waterfall · Minnesota', date: '' },
-    { src: 'wildlife_glacier_goats.jpg',    loc: 'Mountain Goats · Glacier NP',     date: 'July 2020' },
-    { src: 'landscape_glacier_mountain.jpg',loc: 'Mountain Peak · Glacier NP',      date: 'July 2020' },
-    { src: 'landscape_glacier_frosty.jpg',  loc: 'Frosty Mountain · Glacier NP',    date: 'July 2020' },
-    { src: 'wildlife_glacier_marmot.jpg',   loc: 'Friendly Marmot · Glacier NP',    date: 'July 2020' },
-    { src: 'landscape_badlands_2022.jpg',   loc: 'Badlands National Park',          date: '2022' },
-    { src: 'landscape_glacier_forest_2020.jpg', loc: 'Mountain Through Forest · Glacier NP', date: 'July 2020' },
-    { src: 'wildlife_glacier_rams.jpg',     loc: 'Twin Rams · Glacier NP',          date: 'July 2020' },
-    { src: 'landscape_glacier_sunset_2020.jpg', loc: 'Mountain Sunset · Glacier NP', date: 'July 2020' },
-  ];
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.photo-card'));
+  var photos = cards.map(function(card) {
+    var img = card.querySelector('img');
+    var locEl = card.querySelector('.photo-caption-loc');
+    var dateEl = card.querySelector('.photo-caption-date');
+    return {
+      src: img ? img.getAttribute('src') : '',
+      loc: locEl ? locEl.textContent.trim() : (img ? img.alt : ''),
+      date: dateEl ? dateEl.textContent.trim() : ''
+    };
+  });
 
   var current = 0;
 
   function openLightbox(idx) {
+    if (idx < 0 || idx >= photos.length || !photos[idx].src) return;
     current = idx;
     showPhoto();
     document.getElementById('lightbox-overlay').classList.add('active');
@@ -599,15 +583,30 @@
   function showPhoto() {
     var p = photos[current];
     document.getElementById('lightbox-img').src = p.src;
+    document.getElementById('lightbox-img').alt = p.loc;
     document.getElementById('lightbox-loc').textContent = p.loc;
     document.getElementById('lightbox-date').textContent = p.date;
   }
+
+  cards.forEach(function(card, idx) {
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', 'View ' + (photos[idx].loc || 'image') + ' full size');
+    card.addEventListener('click', function() { openLightbox(idx); });
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openLightbox(idx);
+      }
+    });
+  });
 
   document.getElementById('lightbox-overlay').addEventListener('click', function(e) {
     if (e.target === this) closeLightbox();
   });
 
   document.addEventListener('keydown', function(e) {
+    if (!document.getElementById('lightbox-overlay').classList.contains('active')) return;
     if (e.key === 'Escape') closeLightbox();
     if (e.key === 'ArrowLeft') changeLightbox(-1);
     if (e.key === 'ArrowRight') changeLightbox(1);
